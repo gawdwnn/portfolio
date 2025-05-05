@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Personal Portfolio - Product Engineer
+
+Welcome to the source code for my personal portfolio website. This project showcases my skills, projects, and provides a way to get in touch.
+
+Built with Next.js, React, Tailwind CSS, and TypeScript.
 
 ## Getting Started
 
-First, run the development server:
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### Prerequisites
+
+- Node.js (v18 or later recommended)
+- npm or yarn
+
+### Installation
+
+1.  Clone the repo:
+    ```bash
+    git clone https://github.com/gawdwnn/YOUR_REPOSITORY.git
+    cd YOUR_REPOSITORY
+    ```
+2.  Install NPM packages:
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
+
+### Running the Development Server
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project uses a booking widget from [Cal.com](https://cal.com/). To make the booking functionality work, you need to create a `.env.local` file in the root directory and add your Cal.com details:
 
-## Learn More
+```plaintext
+NEXT_PUBLIC_CAL_USERNAME=YOUR_CAL_USERNAME
+NEXT_PUBLIC_CAL_EVENT_SLUG=YOUR_CAL_EVENT_SLUG
+```
 
-To learn more about Next.js, take a look at the following resources:
+Replace `YOUR_CAL_USERNAME` with your Cal.com username and `YOUR_CAL_EVENT_SLUG` with the specific event type slug you want the widget to use.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Note:** Remember to add `.env.local` to your `.gitignore` file if it's not already there to avoid committing sensitive information. (It appears to be included in the standard Next.js `.gitignore` already).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Built With
 
-## Deploy on Vercel
+- [Next.js](https://nextjs.org/) - React Framework
+- [React](https://reactjs.org/) - JavaScript Library
+- [TypeScript](https://www.typescriptlang.org/) - Typed JavaScript Superset
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-First CSS Framework
+- [Cal.com](https://cal.com/) - Scheduling Infrastructure (@calcom/atoms, @calcom/embed-react)
+- [Geist Font](https://vercel.com/font) - Font Family
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This is a standard Next.js application. You can deploy it to platforms like [Vercel](https://vercel.com/) (recommended), Netlify, AWS Amplify, etc. Refer to the Next.js deployment documentation for details.
+
+---
+
+_Replace `gawdwnn/YOUR_REPOSITORY.git` with your actual GitHub repository details._
