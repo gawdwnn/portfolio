@@ -1,0 +1,147 @@
+import { AnimatePresence, motion } from "framer-motion";
+import React, { KeyboardEvent, ReactNode, useState } from "react";
+import TerminalWindow from "./TerminalWindow";
+
+export interface TerminalResponse {
+  command: string;
+  response: string | ReactNode;
+}
+
+/**
+ * InteractiveTerminal Component
+ *
+ * A reusable terminal component that supports user interaction through command input.
+ *
+ * Features:
+ * - Displays initial content (can be used for welcome messages or introductions)
+ * - Provides a command prompt for user input
+ * - Processes commands against a predefined set of available commands
+ * - Maintains a history of commands and responses
+ * - Supports custom styling through various props
+ *
+ * Behavior:
+ * - Commands are entered in a text input field
+ * - When a command is submitted (with Enter key), it's processed against availableCommands
+ * - If a command is recognized, its corresponding response is displayed
+ * - If not recognized, a default message is shown
+ * - The "clear" command is special and clears the command history
+ * - Command history is maintained and displayed in order
+ *
+ * This component serves as the basis for text-based terminal interfaces like those
+ * used in the About section.
+ */
+interface InteractiveTerminalProps {
+  title?: string;
+  titleContent?: ReactNode;
+  headerClassName?: string;
+  initialContent?: ReactNode[];
+  showPrompt?: boolean;
+  availableCommands?: Record<string, string | ReactNode>;
+  className?: string;
+  autoFocus?: boolean;
+  onCommand?: (command: string) => void;
+}
+
+// User input and command response handling
+const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
+  title = "terminal",
+  titleContent,
+  headerClassName,
+  initialContent = [],
+  showPrompt = true,
+  availableCommands = {},
+  className = "",
+  autoFocus = false,
+  onCommand,
+}) => {
+  const [userQuery, setUserQuery] = useState("");
+  const [responses, setResponses] = useState<TerminalResponse[]>([]);
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && userQuery.trim() !== "") {
+      const command = userQuery.toLowerCase().trim();
+
+      if (command === "clear") {
+        setResponses([]);
+      } else {
+        const response =
+          command in availableCommands
+            ? availableCommands[command]
+            : "Command not recognized. Try 'help' for available commands.";
+
+        setResponses([...responses, { command: userQuery, response }]);
+      }
+
+      if (onCommand) {
+        onCommand(command);
+      }
+
+      setUserQuery("");
+    }
+  };
+
+  return (
+    <TerminalWindow
+      title={title}
+      titleContent={titleContent}
+      headerClassName={headerClassName}
+      className={className}
+    >
+      <div className="font-mono text-sm leading-relaxed">
+        <AnimatePresence>
+          {/* Initial content */}
+          {initialContent.map((content, index) => (
+            <motion.div
+              key={`initial-${index}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mb-4"
+            >
+              {content}
+            </motion.div>
+          ))}
+
+          {/* Display previous command responses */}
+          {responses.map((item, index) => (
+            <motion.div
+              key={`response-${index}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-4"
+            >
+              <div className="flex items-center text-white">
+                <span className="text-green-400 mr-2">$ </span>
+                <span>{item.command}</span>
+              </div>
+              <div className="pl-4 mt-1 text-gray-300 whitespace-pre-line">
+                {item.response}
+              </div>
+            </motion.div>
+          ))}
+
+          {/* Interactive prompt */}
+          {showPrompt && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex items-center"
+            >
+              <span className="text-green-400 mr-2">$ </span>
+              <input
+                type="text"
+                value={userQuery}
+                onChange={(e) => setUserQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="flex-1 bg-transparent outline-none"
+                placeholder="Type a command..."
+                autoFocus={autoFocus}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </TerminalWindow>
+  );
+};
+
+export default InteractiveTerminal;

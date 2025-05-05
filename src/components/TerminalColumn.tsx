@@ -1,15 +1,56 @@
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Clock, Command, Terminal, Waves } from "lucide-react";
+import { Waves } from "lucide-react";
 import CommandLine from "./CommandLine";
+import TerminalHeader from "./TerminalHeader";
+import TerminalOptionMenu from "./TerminalOptionMenu";
+import TerminalSequence, { Step } from "./TerminalSequence";
 import TerminalWindow from "./TerminalWindow";
-import TypewriterText from "./TypewriterText";
 
-interface Step {
-  command: string;
-  output: string[];
-}
-
+/**
+ * TerminalColumn Component
+ * ========================
+ *
+ * A terminal UI that transitions between two main modes: animation and interactive menu.
+ * This component dynamically displays a sequence of commands with typed animation effects,
+ * then transitions to an interactive menu once complete.
+ *
+ * Component Flow:
+ * --------------
+ * 1. Initial Render → Sequential Animation Mode (showMenu: false)
+ * 2. As animations complete → activeStep increments
+ * 3. When all steps are done → Transition to Menu Mode (showMenu: true)
+ * 4. User interacts with Menu → Actions triggered based on selection
+ *
+ * The user can also skip the animation at any point by clicking the "Skip" button,
+ * which instantly completes all steps and shows the menu.
+ *
+ * Modes:
+ * ------
+ * 1. Sequential Demonstration Mode (showMenu: false)
+ *    - Shows a sequence of terminal commands with typewriter animations
+ *    - Animated using TerminalSequence component
+ *    - Current step animates with typewriter effect
+ *    - Completed steps shown as static text
+ *    - "Skip animation" button allows bypassing the sequence
+ *
+ * 2. Interactive Menu Mode (showMenu: true)
+ *    - Displays all completed command outputs as static text
+ *    - Shows menu interface with 3 clickable options:
+ *      a. Chat with me
+ *      b. Schedule a call
+ *      c. Command palette
+ *    - Provides visual feedback on selection
+ *    - Shows helpful keyboard shortcut hint
+ *
+ * State Management:
+ * ----------------
+ * - activeStep: Controls current animation position (increments as steps complete)
+ * - showMenu: Boolean flag that toggles between animation and menu modes
+ * - selectedOption: Tracks which menu option is currently selected
+ * - handleStepComplete: Callback triggered when a step animation finishes
+ * - handleOptionSelect: Callback triggered when a menu option is clicked
+ * - setActiveStep/setShowMenu: State setters passed from parent
+ */
 interface TerminalColumnProps {
   activeStep: number;
   steps: Step[];
@@ -31,6 +72,35 @@ const TerminalColumn = ({
   setActiveStep,
   setShowMenu,
 }: TerminalColumnProps) => {
+  const customTitle = (
+    <div className="flex items-center">
+      <Waves className="w-4 h-4 mr-2 text-indigo-400" />
+      <span>godwin@portfolio ~ (zsh)</span>
+    </div>
+  );
+
+
+  const handleSkip = () => {
+    setActiveStep(steps.length);
+    setShowMenu(true);
+  };
+
+  /**
+   * Renders completed command steps as static text
+   *
+   * In menu mode, this renders all the command outputs that were
+   * previously animated, ensuring informational content remains visible.
+   */
+  const renderCompletedSteps = () => {
+    // Only render in menu mode - animation mode handled by TerminalSequence
+    if (!showMenu) return null;
+
+    // Render all steps as static CommandLine components
+    return steps.map((step, index) => (
+      <CommandLine key={index} command={step.command} output={step.output} />
+    ));
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -38,183 +108,40 @@ const TerminalColumn = ({
       transition={{ duration: 0.6 }}
       className="order-2 lg:order-1"
     >
-      <TerminalWindow title="godwin@portfolio ~ (zsh)">
-        <div className="flex items-center gap-2 mb-6 text-indigo-400">
-          <Waves className="w-5 h-5" />
-          <span className="font-semibold">AI-Powered Portfolio</span>
-          <span className="bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded text-xs ml-auto">
-            v1.0.0
-          </span>
-        </div>
+      {/* Conditional rendering based on showMenu state */}
+      {!showMenu ? (
+        // ===== ANIMATION MODE =====
+        // Uses TerminalSequence for typewriter animations
+        <TerminalSequence
+          steps={steps}
+          activeStep={activeStep}
+          title="godwin@portfolio ~ (zsh)"
+          titleContent={customTitle}
+          onStepComplete={handleStepComplete}
+          onSkip={handleSkip}
+        >
+          <TerminalHeader />
+        </TerminalSequence>
+      ) : (
+        // ===== MENU MODE =====
+        // Shows static command output + interactive menu
+        <TerminalWindow
+          title="godwin@portfolio ~ (zsh)"
+          titleContent={customTitle}
+        >
+          {/* Terminal header with title and version */}
+          <TerminalHeader />
 
-        {/* Steps execution */}
-        {steps.map((step, index) => (
-          <div key={index} className={index > activeStep ? "hidden" : "block"}>
-            {index === activeStep && !showMenu ? (
-              <div className="mb-6">
-                <div className="flex items-start gap-2 mb-1">
-                  <span className="text-green-500">$</span>
-                  <TypewriterText
-                    text={step.command}
-                    speed={80}
-                    onComplete={() => setTimeout(handleStepComplete, 1000)}
-                  />
-                </div>
-                <div className="pl-6 text-neutral-400">
-                  {step.output.map((line, i) => (
-                    <TypewriterText
-                      key={i}
-                      text={line}
-                      speed={20}
-                      className="mb-1"
-                    />
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <CommandLine command={step.command} output={step.output} />
-            )}
-          </div>
-        ))}
+          {/* Previously executed commands - preserves informational content */}
+          {renderCompletedSteps()}
 
-        {/* Simplified menu with just 3 options - displayed after commands */}
-        {showMenu && (
-          <div className="mt-6 border-t border-neutral-800 pt-6">
-            <div className="mb-2">
-              <div className="flex items-start gap-2 mb-1">
-                <span className="text-green-500">$</span>
-                <span className="text-white">./connect.sh --interactive</span>
-              </div>
-            </div>
-
-            <div className="pl-6 mb-6">
-              <div className="text-cyan-300 mb-3">Select an option:</div>
-
-              <div className="space-y-2 font-mono">
-                {/* Chat option */}
-                <div
-                  className={cn(
-                    "group flex items-center gap-3 py-2 px-3 rounded cursor-pointer transition-colors relative",
-                    selectedOption === 1
-                      ? "bg-indigo-600"
-                      : "hover:bg-white/5 border border-indigo-500/30"
-                  )}
-                  onClick={() => handleOptionSelect(1)}
-                >
-                  <div className="w-5 h-5 flex items-center justify-center">
-                    {selectedOption === 1 ? (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="w-2 h-2 bg-white rounded-full"
-                      />
-                    ) : (
-                      <div className="w-4 h-4 border border-indigo-400 rounded-sm group-hover:border-white transition-colors" />
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-indigo-400 font-semibold group-hover:text-white transition-colors">
-                      [1]
-                    </span>
-                    <Terminal className="w-4 h-4 text-indigo-200" />
-                    <span className="text-white">Chat with me</span>
-                  </div>
-                  <ArrowUpRight className="w-3 h-3 text-indigo-300 opacity-0 group-hover:opacity-100 transition-opacity ml-auto" />
-                </div>
-
-                {/* Book call option */}
-                <div
-                  className={cn(
-                    "group flex items-center gap-3 py-2 px-3 rounded cursor-pointer transition-colors",
-                    selectedOption === 2
-                      ? "bg-indigo-600"
-                      : "hover:bg-white/5 border border-indigo-500/30"
-                  )}
-                  onClick={() => handleOptionSelect(2)}
-                >
-                  <div className="w-5 h-5 flex items-center justify-center">
-                    {selectedOption === 2 ? (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="w-2 h-2 bg-white rounded-full"
-                      />
-                    ) : (
-                      <div className="w-4 h-4 border border-indigo-400 rounded-sm group-hover:border-white transition-colors" />
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-indigo-400 font-semibold group-hover:text-white transition-colors">
-                      [2]
-                    </span>
-                    <Clock className="w-4 h-4 text-indigo-200" />
-                    <span className="text-white">Schedule a call</span>
-                  </div>
-                  <ArrowUpRight className="w-3 h-3 text-indigo-300 opacity-0 group-hover:opacity-100 transition-opacity ml-auto" />
-                </div>
-
-                {/* Command palette option */}
-                <div
-                  className={cn(
-                    "group flex items-center gap-3 py-2 px-3 rounded cursor-pointer transition-colors",
-                    selectedOption === 3
-                      ? "bg-indigo-600"
-                      : "hover:bg-white/5 border border-indigo-500/30"
-                  )}
-                  onClick={() => handleOptionSelect(3)}
-                >
-                  <div className="w-5 h-5 flex items-center justify-center">
-                    {selectedOption === 3 ? (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="w-2 h-2 bg-white rounded-full"
-                      />
-                    ) : (
-                      <div className="w-4 h-4 border border-indigo-400 rounded-sm group-hover:border-white transition-colors" />
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-indigo-400 font-semibold group-hover:text-white transition-colors">
-                      [3]
-                    </span>
-                    <Command className="w-4 h-4 text-indigo-200" />
-                    <span className="text-white">Command palette</span>
-                  </div>
-                  <ArrowUpRight className="w-3 h-3 text-indigo-300 opacity-0 group-hover:opacity-100 transition-opacity ml-auto" />
-                </div>
-              </div>
-            </div>
-
-            {/* Terminal prompt */}
-            <div className="flex items-start gap-2 mb-1 animate-pulse">
-              <span className="text-green-500">$</span>
-              <span className="text-white">_</span>
-            </div>
-
-            {/* Shortcut hint */}
-            <div className="mt-4 text-neutral-500 text-xs">
-              Tip: Press <span className="text-indigo-400">Ctrl/⌘K</span> for
-              command palette
-            </div>
-          </div>
-        )}
-
-        {/* Add a manual "Skip" option for immediate access */}
-        {!showMenu && activeStep < steps.length && (
-          <div className="mt-4 text-center">
-            <button
-              onClick={() => {
-                setActiveStep(steps.length);
-                setShowMenu(true);
-              }}
-              className="text-indigo-400 text-xs hover:text-indigo-300 underline"
-            >
-              Skip animation
-            </button>
-          </div>
-        )}
-      </TerminalWindow>
+          {/* Interactive menu with clickable options */}
+          <TerminalOptionMenu
+            selectedOption={selectedOption}
+            handleOptionSelect={handleOptionSelect}
+          />
+        </TerminalWindow>
+      )}
     </motion.div>
   );
 };

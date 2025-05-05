@@ -176,10 +176,6 @@ export default function Footer() {
               <Cpu className="w-3 h-3" />
               <span>{powerStatus}</span>
             </div>
-            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-neutral-900 text-neutral-400 text-xs">
-              <Command className="w-3 h-3" />
-              <span>Press K</span>
-            </div>
           </div>
         </div>
 
