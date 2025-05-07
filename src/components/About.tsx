@@ -39,7 +39,13 @@ import TypewriterText from "./TypewriterText";
  * - animationStarted: Flag to ensure animation only starts once
  * - useIntersectionObserver: Handles section visibility detection
  */
-export default function About() {
+
+// Define props for About component
+interface AboutProps {
+  id?: string;
+}
+
+export default function About({ id }: AboutProps) {
   // Reference to the section element for intersection observer
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -158,11 +164,12 @@ export default function About() {
       );
     }
 
+    //TODO: modify this bio content to be a great elevator pitch
     if (terminalStage >= 3) {
       content.push(
         <TypewriterText
           key="bio"
-          text="Hello! I'm a Software Engineer with five years of experience, currently also studying Software Development at Conestoga College in Waterloo. I enjoy working across the full stack, primarily using TypeScript and Python, and I'm comfortable with DevOps practices too. I've built scalable solutions for B2B and B2C startups and thrive in small, agile teams, often leading feature development end-to-end. Writing clean, tested code and ensuring smooth delivery is key for me. I value best practices, collaboration, and delivering impactful results, and I'm eager to contribute my skills to new projects."
+          text="I'm a full-stack Software Engineer with 5 years of experience building scalable applications. I specialize in TypeScript and Python, with expertise in modern web technologies and cloud infrastructure. My approach combines technical excellence with practical problem-solving - I've successfully delivered complex features for both B2B and B2C startups, often leading development from concept to deployment. I'm passionate about writing clean, maintainable code and creating solutions that make a real impact."
           speed={10}
           className="text-gray-300 mt-4"
           onComplete={() => setTerminalStage(4)} // Trigger stage 4 on completion
@@ -185,7 +192,6 @@ export default function About() {
     return content;
   };
 
-  // Create custom title content with Terminal icon
   const customTitle = (
     <div className="flex items-center text-sm font-mono">
       <Terminal className="w-4 h-4 mr-2" />
@@ -196,7 +202,7 @@ export default function About() {
   return (
     <section
       ref={ref}
-      id="about"
+      id={id}
       className="py-20 md:py-28 bg-gradient-to-b from-gray-900 to-black text-gray-200"
     >
       <div className="container mx-auto px-4">

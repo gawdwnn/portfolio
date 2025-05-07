@@ -11,15 +11,16 @@ import TerminalColumn from "./TerminalColumn";
 
 interface HeroProps {
   onBookCallClick: () => void;
+  id?: string;
 }
 
-export default function Hero({ onBookCallClick }: HeroProps) {
+export default function Hero({ onBookCallClick, id }: HeroProps) {
   const [showChat, setShowChat] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showMenu, setShowMenu] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
-  
+
   const mousePosition = useSpotlightEffect(); // Use the custom hook
 
   // Define commands here, passing necessary actions
@@ -29,28 +30,56 @@ export default function Hero({ onBookCallClick }: HeroProps) {
       name: "Home",
       category: "navigation",
       icon: "home",
-      action: () => console.log("Navigate to Home (Action TBD)"),
+      action: () => {
+        const targetId = "hero-section";
+        const section = document.getElementById(targetId);
+        section?.scrollIntoView({ behavior: "smooth" });
+        history.pushState(null, "", `#${targetId}`);
+        section?.setAttribute("tabindex", "-1");
+        section?.focus({ preventScroll: true });
+      },
     },
     {
       id: "projects",
       name: "Projects",
       category: "navigation",
       icon: "projects",
-      action: () => console.log("Navigate to Projects (Action TBD)"),
+      action: () => {
+        const targetId = "projects-section";
+        const section = document.getElementById(targetId);
+        section?.scrollIntoView({ behavior: "smooth" });
+        history.pushState(null, "", `#${targetId}`);
+        section?.setAttribute("tabindex", "-1");
+        section?.focus({ preventScroll: true });
+      },
     },
     {
       id: "skills",
       name: "Skills",
       category: "navigation",
       icon: "skills",
-      action: () => console.log("Navigate to Skills (Action TBD)"),
+      action: () => {
+        const targetId = "skills-section";
+        const section = document.getElementById(targetId);
+        section?.scrollIntoView({ behavior: "smooth" });
+        history.pushState(null, "", `#${targetId}`);
+        section?.setAttribute("tabindex", "-1");
+        section?.focus({ preventScroll: true });
+      },
     },
     {
       id: "contact",
       name: "Contact",
       category: "navigation",
       icon: "contact",
-      action: () => console.log("Navigate to Contact (Action TBD)"),
+      action: () => {
+        const targetId = "about-section"; // Assuming 'about-section' is the ID for Contact
+        const section = document.getElementById(targetId);
+        section?.scrollIntoView({ behavior: "smooth" });
+        history.pushState(null, "", `#${targetId}`);
+        section?.setAttribute("tabindex", "-1");
+        section?.focus({ preventScroll: true });
+      },
     },
 
     // Action commands
@@ -69,27 +98,6 @@ export default function Hero({ onBookCallClick }: HeroProps) {
       action: () => onBookCallClick(),
     },
 
-    // Terminal commands
-    {
-      id: "skip",
-      name: "Skip animation",
-      category: "terminal",
-      icon: "terminal",
-      action: () => {
-        setActiveStep(steps.length); // Access steps defined below
-        setShowMenu(true);
-      },
-    },
-    {
-      id: "replay",
-      name: "Replay animation",
-      category: "terminal",
-      icon: "terminal",
-      action: () => {
-        setShowMenu(false);
-        setActiveStep(0);
-      },
-    },
   ];
 
   // Keyboard shortcut handler for command palette toggle ONLY
@@ -110,10 +118,7 @@ export default function Hero({ onBookCallClick }: HeroProps) {
   const steps = [
     {
       command: "whoami",
-      output: [
-        "Godwin O.",
-        "Full Stack Engineer & AI Agents Specialist",
-      ],
+      output: ["Godwin O.", "Product Engineer & AI Agents Specialist"],
     },
     {
       command: "cat skills.txt",
@@ -162,6 +167,7 @@ export default function Hero({ onBookCallClick }: HeroProps) {
 
   return (
     <section
+      id={id}
       className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-black via-neutral-950 to-neutral-900"
       // Apply spotlight effect using the hook
       style={{

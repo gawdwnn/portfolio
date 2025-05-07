@@ -6,7 +6,12 @@ import { useEffect, useState } from "react";
 import { IconCloud } from "./IconCloud";
 import { Tiles } from "./Tiles";
 
-export default function Skills() {
+// Define props for Skills component
+interface SkillsProps {
+  id?: string;
+}
+
+export default function Skills({ id }: SkillsProps) {
   const [activeTab, setActiveTab] = useState("skills");
   const controls = useAnimation();
 
@@ -173,7 +178,7 @@ export default function Skills() {
 
   return (
     <section
-      id="skills"
+      id={id}
       className="py-16 md:py-24 relative overflow-hidden bg-neutral-950 text-white"
     >
       {/* Background grid effect */}

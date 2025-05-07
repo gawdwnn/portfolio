@@ -44,7 +44,7 @@ portfolio should have some Agentic AI features
 [] Security: implement authentication with supabase auth.
 
 techstack
-nextjs, tailwindcss, framer motion, next-themes, cal.com, supabase, vercel, github ci/cd deployment to vercel, biomejs, nextjs aisdk, 
+nextjs, tailwindcss, framer motion, next-themes, cal.com, supabase, vercel, github ci/cd deployment to vercel, biomejs, nextjs aisdk, ANALYTICS!
 
 ## some ideas to consider - 
 toogle light and dark mode via prompt/speech
@@ -69,3 +69,4 @@ maintain a flat folder structure
 when required to make a coding change/update you must focus on making substantial updates/changes, add necessary comments, do not make formating or linting changes/updates!
 
 do not make assumptions, ask questions when in doubt, strictly follow the instruction/request
+always use hooks from usehooks-ts when possible - https://github.com/juliencrn/usehooks-ts

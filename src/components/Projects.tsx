@@ -20,7 +20,9 @@ const ProjectGrid = ({
     </div>
   );
 };
-
+// make them git cards i.e cards with prefetched github repo data
+// use the github api to get the repo data
+// add 2 projects with "in progress" status
 const ProjectCard = ({
   title,
   description,
@@ -243,7 +245,12 @@ const FeaturedProjectCard = ({
   );
 };
 
-export default function Projects() {
+// Define props for Projects component
+interface ProjectsProps {
+  id?: string;
+}
+
+export default function Projects({ id }: ProjectsProps) {
   // Example project data - replace with real data
   const projects = [
     {
@@ -312,7 +319,7 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" className="py-16 md:py-24">
+    <section id={id} className="py-16 md:py-24">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center mb-16">
           <div className="inline-block rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 mb-4">

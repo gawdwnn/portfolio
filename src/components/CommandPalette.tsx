@@ -25,45 +25,74 @@ const CommandPalette = ({ isOpen, onClose, commands }: CommandPaletteProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const commandInputRef = useRef<HTMLInputElement>(null);
 
-  // Filter commands based on search input
+  // Simplified filterCommands, logic moved to useEffect
   const filterCommands = (query: string) => {
     setSearchQuery(query);
-    if (!query) {
-      setFilteredCommands(commands);
-      setSelectedCommandIndex(0); // Reset index when clearing search
-      return;
-    }
-    const filtered = commands.filter((command) =>
-      command.name.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredCommands(filtered);
-    setSelectedCommandIndex(0); // Reset index on new search
   };
 
-  // Reset command palette state
-  const resetCommandPalette = () => {
-    setFilteredCommands(commands); // Reset to all commands when closing/opening
-    setSelectedCommandIndex(0);
-    setSearchQuery("");
-    if (commandInputRef.current) {
-      commandInputRef.current.value = "";
-    }
-  };
-
-  // Focus the command input when palette is shown
+  // Effect for handling palette open/close, command list changes, search query, and hash-based selection
   useEffect(() => {
     if (isOpen) {
-      // Needs a slight delay for the modal transition to complete
+      document.body.style.overflow = "hidden"; // Prevent background scroll
+      // Focus input when palette opens
       setTimeout(() => {
         commandInputRef.current?.focus();
       }, 100);
+
+      // Determine current filtered list and selected index
+      if (searchQuery) {
+        const filtered = commands.filter((command) =>
+          command.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setFilteredCommands(filtered);
+        setSelectedCommandIndex(0); // Reset index for new search results
+      } else {
+        // No search query: use all commands and try to select based on URL hash
+        setFilteredCommands(commands); // Show all commands
+        const currentHash = window.location.hash;
+        let activeCommandId: string | null = null;
+
+        if (currentHash) {
+          const sectionIdFromHash = currentHash.substring(1); // Remove #
+          // This mapping aligns with the target IDs set in Hero.tsx actions
+          if (sectionIdFromHash === "hero-section") activeCommandId = "home";
+          else if (sectionIdFromHash === "projects-section")
+            activeCommandId = "projects";
+          else if (sectionIdFromHash === "skills-section")
+            activeCommandId = "skills";
+          else if (sectionIdFromHash === "about-section")
+            activeCommandId = "contact";
+        }
+
+        if (activeCommandId) {
+          const indexToSelect = commands.findIndex(
+            (cmd) => cmd.id === activeCommandId && cmd.category === "navigation"
+          );
+          if (indexToSelect !== -1) {
+            setSelectedCommandIndex(indexToSelect);
+          } else {
+            setSelectedCommandIndex(0); // Default if command not found or not navigation
+          }
+        } else {
+          setSelectedCommandIndex(0); // Default if no relevant hash
+        }
+      }
     } else {
-      // Reset when closing
-      resetCommandPalette();
+      // Palette is closing, reset its state
+      setSearchQuery(""); // Clear search query
+      setFilteredCommands(commands); // Reset to all commands
+      setSelectedCommandIndex(0); // Reset selected index
+      if (commandInputRef.current) {
+        commandInputRef.current.value = ""; // Clear input field
+      }
+      document.body.style.overflow = ""; // Restore background scroll
     }
-    // Reset filter when commands list changes externally
-    setFilteredCommands(commands);
-  }, [isOpen, commands]); // Rerun if isOpen or the commands list changes
+
+    // Cleanup function to ensure scroll is restored if component unmounts while open
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen, commands, searchQuery]); // Dependencies updated
 
   // Keyboard navigation handler
   useEffect(() => {
@@ -124,7 +153,7 @@ const CommandPalette = ({ isOpen, onClose, commands }: CommandPaletteProps) => {
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.2 }}
         className="w-full max-w-md bg-neutral-900/90 border border-neutral-800 rounded-lg overflow-hidden shadow-2xl backdrop-blur-sm"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-2 border-b border-neutral-800 px-4 py-3">
           <Command className="w-4 h-4 text-indigo-400" />
@@ -133,7 +162,7 @@ const CommandPalette = ({ isOpen, onClose, commands }: CommandPaletteProps) => {
             className="bg-transparent border-0 outline-none text-white w-full placeholder:text-neutral-500 text-sm"
             placeholder="Type a command..."
             onChange={(e) => filterCommands(e.target.value)}
-            value={searchQuery} // Control the input value
+            value={searchQuery}
           />
           <div className="flex gap-1 text-xs w-full justify-end">
             <span className="bg-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-mono">

@@ -13,10 +13,10 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col text-foreground overflow-x-hidden antialiased">
-      <Hero onBookCallClick={() => setShowBooking(true)} />
-      <Projects />
-      <Skills />
-      <About />
+      <Hero id="hero-section" onBookCallClick={() => setShowBooking(true)} />
+      <Projects id="projects-section" />
+      <Skills id="skills-section" />
+      <About id="about-section" />
       <Footer />
 
       {/* use context to render modals and alerts avoid this 👇🏽 */}
