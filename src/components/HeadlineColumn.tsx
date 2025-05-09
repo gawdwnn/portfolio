@@ -20,7 +20,6 @@ import {
   Users,
 } from "lucide-react";
 import AnimatedTextCycle from "./AnimatedTextCycle";
-import ParticleBackground from "./ParticleBackground";
 
 interface HeadlineColumnProps {
   onShowChat: () => void;
@@ -40,9 +39,6 @@ const HeadlineColumn = ({
       transition={{ duration: 0.6, delay: 0.3 }}
       className="relative order-1 lg:order-2 flex flex-col items-center lg:items-start text-center lg:text-left"
     >
-      {/* Particle Background - placed inside the relative container */}
-      <ParticleBackground />
-
       {/* Content needs to be relatively positioned to sit above particles */}
       <div className="relative z-10 flex flex-col items-center lg:items-start w-full">
         {/* Enhanced Professional Title Badge */}

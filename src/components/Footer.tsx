@@ -42,7 +42,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="py-8 px-6 bg-neutral-950 border-t border-neutral-900 text-neutral-500">
+    <footer className="pt-8 px-6 bg-neutral-950 border-t border-neutral-900 text-neutral-500">
       <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6">
         {/* Copyright Info */}
         <div className="text-xs text-center sm:text-left">
@@ -79,6 +79,9 @@ export default function Footer() {
             <resumeLink.icon className="w-5 h-5" />
           </motion.a>
         </div>
+      </div>
+      <div className="text-[10px] text-neutral-600 text-center mt-6 pb-2">
+        Built with Cursor AI
       </div>
     </footer>
   );

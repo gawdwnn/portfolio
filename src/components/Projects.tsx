@@ -1,3 +1,40 @@
+/**
+ * Projects Component
+ *
+ * This component displays a grid of project cards, with the ability to fetch and display
+ * real GitHub repository data. The implementation includes:
+ *
+ * 1. GitHub API Integration
+ *    - Uses GitHub REST API v3 to fetch repository data
+ *    - Implements rate limiting and caching strategies
+ *    - Handles authentication and error states
+ *
+ * 2. Repository Data Display
+ *    - Stars, forks, and issues count
+ *    - Primary language with color indicator
+ *    - Last updated timestamp
+ *    - Repository description
+ *    - Topics/tags
+ *    - Contributor information
+ *
+ * 3. Interactive Features
+ *    - Star/Fork repository directly from card
+ *    - View repository statistics
+ *    - Access commit history
+ *    - Language breakdown
+ *
+ * 4. Performance Optimizations
+ *    - Server-side data fetching
+ *    - Client-side caching with SWR/React Query
+ *    - Incremental static regeneration
+ *    - Optimized image loading
+ *
+ * @todo Implement GitHub API integration
+ * @todo Add repository data fetching
+ * @todo Enhance UI with GitHub-specific elements
+ * @todo Implement caching and performance optimizations
+ */
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
@@ -20,9 +57,49 @@ const ProjectGrid = ({
     </div>
   );
 };
-// make them git cards i.e cards with prefetched github repo data
-// use the github api to get the repo data
-// add 2 projects with "in progress" status
+
+/**
+ * ProjectCard Component
+ *
+ * Displays a card for a project with GitHub repository integration.
+ *
+ * @param {Object} props
+ * @param {string} props.title - Repository name
+ * @param {string} props.description - Repository description
+ * @param {string} [props.span] - Grid span classes
+ * @param {string} [props.gradient] - Background gradient classes
+ * @param {string} [props.imageUrl] - Repository preview image
+ * @param {string[]} [props.tags] - Repository topics/tags
+ * @param {string} props.demoUrl - Repository URL
+ *
+ * @todo Add GitHub repository data interface
+ * @todo Implement repository data fetching
+ * @todo Add GitHub-specific UI elements:
+ *    - Language indicator with color
+ *    - Star/Fork buttons
+ *    - Repository stats
+ *    - Last commit info
+ *    - Branch status
+ *    - PR count
+ *
+ * Example GitHub data structure:
+ * {
+ *   name: string;
+ *   description: string;
+ *   stargazers_count: number;
+ *   forks_count: number;
+ *   open_issues_count: number;
+ *   language: string;
+ *   updated_at: string;
+ *   html_url: string;
+ *   topics: string[];
+ *   default_branch: string;
+ *   owner: {
+ *     login: string;
+ *     avatar_url: string;
+ *   };
+ * }
+ */
 const ProjectCard = ({
   title,
   description,
