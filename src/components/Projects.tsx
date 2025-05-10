@@ -1,7 +1,7 @@
 /**
- * Projects Component
+ * New Projects Component implementation guidelines:
  *
- * This component displays a grid of project cards, with the ability to fetch and display
+ * This component should display a grid of project cards, with the ability to fetch and display
  * real GitHub repository data. The implementation includes:
  *
  * 1. GitHub API Integration
