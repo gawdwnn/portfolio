@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import CommandLine from "./CommandLine";
 import TerminalWindow from "./TerminalWindow";
 import TypewriterText from "./TypewriterText";
@@ -8,30 +8,6 @@ export interface Step {
   output: string[];
 }
 
-/**
- * TerminalSequence Component
- *
- * A terminal component that displays a sequence of command steps with typewriter animations.
- *
- * Features:
- * - Displays a sequence of terminal commands and their outputs
- * - Animates the active step with typewriter effects
- * - Shows previously completed steps as static text
- * - Offers a skip option to bypass animations
- * - Supports custom styling through various props
- * - Accepts children to display optional content before commands
- *
- * Behavior:
- * - Steps progress one at a time based on activeStep prop
- * - Current step animates with typewriter effect, showing command then output
- * - Previous steps display as static text
- * - Future steps are hidden until reached
- * - When a step animation completes, it triggers onStepComplete callback
- * - User can skip animations with the "Skip animation" button (triggers onSkip)
- *
- * This component is used for sequential, animated command demonstrations like
- * those in the TerminalColumn component.
- */
 interface TerminalSequenceProps {
   steps: Step[];
   activeStep: number;
@@ -58,6 +34,23 @@ const TerminalSequence: React.FC<TerminalSequenceProps> = ({
   onSkip,
   children,
 }) => {
+  // Effect to handle auto-skip if we've finished all steps programmatically
+  useEffect(() => {
+    // If active step is already at or beyond the end, we should call onStepComplete
+    if (activeStep >= steps.length && onStepComplete) {
+      onStepComplete();
+    }
+  }, [activeStep, steps.length, onStepComplete]);
+
+  // Handler for when command finishes typing
+  const handleCommandComplete = (stepIndex: number) => {
+    // If this is the last output line of the current step, signal step completion
+    if (onStepComplete) {
+      // Use a timeout to allow a pause between command and next step
+      setTimeout(onStepComplete, 1000);
+    }
+  };
+
   return (
     <TerminalWindow
       title={title}
@@ -78,9 +71,7 @@ const TerminalSequence: React.FC<TerminalSequenceProps> = ({
                 <TypewriterText
                   text={step.command}
                   speed={80}
-                  onComplete={() =>
-                    onStepComplete && setTimeout(onStepComplete, 1000)
-                  }
+                  onComplete={() => handleCommandComplete(index)}
                 />
               </div>
               <div className="pl-6 text-neutral-400">

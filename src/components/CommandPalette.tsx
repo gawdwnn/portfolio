@@ -2,8 +2,17 @@
 
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Clock, Command, Search, Terminal } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import {
+  Clock,
+  Command,
+  Home,
+  Layers,
+  Lightbulb,
+  Mail,
+  RefreshCw,
+  Search,
+} from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export interface CommandItem {
   id: string;
@@ -16,71 +25,171 @@ export interface CommandItem {
 interface CommandPaletteProps {
   isOpen: boolean;
   onClose: () => void;
-  commands: CommandItem[];
+  onReplayIntro?: () => void;
+  onScheduleCall?: () => void;
 }
 
-const CommandPalette = ({ isOpen, onClose, commands }: CommandPaletteProps) => {
-  const [filteredCommands, setFilteredCommands] = useState(commands);
-  const [selectedCommandIndex, setSelectedCommandIndex] = useState(0);
+const CommandPalette = ({
+  isOpen,
+  onClose,
+  onReplayIntro,
+  onScheduleCall,
+}: CommandPaletteProps) => {
+  const createDefaultCommands = (): CommandItem[] => [
+    {
+      id: "home",
+      name: "Home",
+      category: "navigation",
+      icon: "home",
+      action: () => {
+        const targetId = "hero-section";
+        const section = document.getElementById(targetId);
+        section?.scrollIntoView({ behavior: "smooth" });
+        history.pushState(null, "", `#${targetId}`);
+        section?.setAttribute("tabindex", "-1");
+        section?.focus({ preventScroll: true });
+      },
+    },
+    {
+      id: "projects",
+      name: "Projects",
+      category: "navigation",
+      icon: "projects",
+      action: () => {
+        const targetId = "projects-section";
+        const section = document.getElementById(targetId);
+        section?.scrollIntoView({ behavior: "smooth" });
+        history.pushState(null, "", `#${targetId}`);
+        section?.setAttribute("tabindex", "-1");
+        section?.focus({ preventScroll: true });
+      },
+    },
+    {
+      id: "skills",
+      name: "Skills",
+      category: "navigation",
+      icon: "skills",
+      action: () => {
+        const targetId = "skills-section";
+        const section = document.getElementById(targetId);
+        section?.scrollIntoView({ behavior: "smooth" });
+        history.pushState(null, "", `#${targetId}`);
+        section?.setAttribute("tabindex", "-1");
+        section?.focus({ preventScroll: true });
+      },
+    },
+    {
+      id: "contact",
+      name: "Contact",
+      category: "navigation",
+      icon: "contact",
+      action: () => {
+        const targetId = "about-section";
+        const section = document.getElementById(targetId);
+        section?.scrollIntoView({ behavior: "smooth" });
+        history.pushState(null, "", `#${targetId}`);
+        section?.setAttribute("tabindex", "-1");
+        section?.focus({ preventScroll: true });
+      },
+    },
+    {
+      id: "call",
+      name: "Schedule a call",
+      category: "action",
+      icon: "call",
+      action: () => onScheduleCall && onScheduleCall(),
+    },
+    {
+      id: "replay",
+      name: "Replay intro animation",
+      category: "action",
+      icon: "replay",
+      action: () => {
+        // Navigate to hero section
+        const heroSection = document.getElementById("hero-section");
+        if (heroSection) {
+          heroSection.scrollIntoView({ behavior: "smooth" });
+          // Trigger replay via callback or event
+          if (onReplayIntro) {
+            onReplayIntro();
+          } else {
+            const event = new CustomEvent("replay-intro");
+            window.dispatchEvent(event);
+          }
+        }
+      },
+    },
+  ];
+
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCommandIndex, setSelectedCommandIndex] = useState(0);
   const commandInputRef = useRef<HTMLInputElement>(null);
 
-  // Simplified filterCommands, logic moved to useEffect
-  const filterCommands = (query: string) => {
-    setSearchQuery(query);
-  };
+  // Memoize the commands to prevent recreation on every render
+  const commands = useMemo(
+    () => createDefaultCommands(),
+    [onScheduleCall, onReplayIntro]
+  );
 
-  // Effect for handling palette open/close, command list changes, search query, and hash-based selection
+  // Simplified filterCommands, logic moved to useEffect
+  const filterCommands = useCallback((query: string) => {
+    setSearchQuery(query);
+  }, []);
+
+  // Memoize filtered commands to avoid recalculating on every render
+  const filteredCommands = useMemo(() => {
+    if (searchQuery) {
+      return commands.filter((command) =>
+        command.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    return commands;
+  }, [commands, searchQuery]);
+
+  // Memoized function to get selected index based on URL hash
+  const getInitialSelectedIndex = useCallback(() => {
+    if (!searchQuery) {
+      const currentHash = window.location.hash;
+      let activeCommandId: string | null = null;
+
+      if (currentHash) {
+        const sectionIdFromHash = currentHash.substring(1);
+        if (sectionIdFromHash === "hero-section") activeCommandId = "home";
+        else if (sectionIdFromHash === "projects-section")
+          activeCommandId = "projects";
+        else if (sectionIdFromHash === "skills-section")
+          activeCommandId = "skills";
+        else if (sectionIdFromHash === "about-section")
+          activeCommandId = "contact";
+      }
+
+      if (activeCommandId) {
+        const indexToSelect = commands.findIndex(
+          (cmd) => cmd.id === activeCommandId && cmd.category === "navigation"
+        );
+        if (indexToSelect !== -1) {
+          return indexToSelect;
+        }
+      }
+    }
+    return 0;
+  }, [commands, searchQuery]);
+
+  // Effect for handling palette open/close and focus management
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden"; // Prevent background scroll
+      document.body.style.overflow = "hidden";
+
       // Focus input when palette opens
       setTimeout(() => {
         commandInputRef.current?.focus();
       }, 100);
 
-      // Determine current filtered list and selected index
-      if (searchQuery) {
-        const filtered = commands.filter((command) =>
-          command.name.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-        setFilteredCommands(filtered);
-        setSelectedCommandIndex(0); // Reset index for new search results
-      } else {
-        // No search query: use all commands and try to select based on URL hash
-        setFilteredCommands(commands); // Show all commands
-        const currentHash = window.location.hash;
-        let activeCommandId: string | null = null;
-
-        if (currentHash) {
-          const sectionIdFromHash = currentHash.substring(1); // Remove #
-          // This mapping aligns with the target IDs set in Hero.tsx actions
-          if (sectionIdFromHash === "hero-section") activeCommandId = "home";
-          else if (sectionIdFromHash === "projects-section")
-            activeCommandId = "projects";
-          else if (sectionIdFromHash === "skills-section")
-            activeCommandId = "skills";
-          else if (sectionIdFromHash === "about-section")
-            activeCommandId = "contact";
-        }
-
-        if (activeCommandId) {
-          const indexToSelect = commands.findIndex(
-            (cmd) => cmd.id === activeCommandId && cmd.category === "navigation"
-          );
-          if (indexToSelect !== -1) {
-            setSelectedCommandIndex(indexToSelect);
-          } else {
-            setSelectedCommandIndex(0); // Default if command not found or not navigation
-          }
-        } else {
-          setSelectedCommandIndex(0); // Default if no relevant hash
-        }
-      }
+      // Set selected index based on URL or search
+      setSelectedCommandIndex(getInitialSelectedIndex());
     } else {
       // Palette is closing, reset its state
       setSearchQuery(""); // Clear search query
-      setFilteredCommands(commands); // Reset to all commands
       setSelectedCommandIndex(0); // Reset selected index
       if (commandInputRef.current) {
         commandInputRef.current.value = ""; // Clear input field
@@ -92,12 +201,12 @@ const CommandPalette = ({ isOpen, onClose, commands }: CommandPaletteProps) => {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isOpen, commands, searchQuery]); // Dependencies updated
+  }, [isOpen, getInitialSelectedIndex]);
 
-  // Keyboard navigation handler
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isOpen) return; // Only handle keys when open
+  // Memoize keyboard handler to prevent recreation on every render
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (!isOpen) return;
 
       if (e.key === "ArrowDown") {
         e.preventDefault();
@@ -111,32 +220,41 @@ const CommandPalette = ({ isOpen, onClose, commands }: CommandPaletteProps) => {
         e.preventDefault();
         if (filteredCommands[selectedCommandIndex]) {
           filteredCommands[selectedCommandIndex].action();
-          onClose(); // Close palette after action
+          onClose();
         }
       } else if (e.key === "Escape") {
         e.preventDefault();
-        onClose(); // Close palette on Escape
+        onClose();
       }
-    };
+    },
+    [isOpen, filteredCommands, selectedCommandIndex, onClose]
+  );
 
+  // Keyboard navigation handler
+  useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, filteredCommands, selectedCommandIndex, onClose]); // Add dependencies
+  }, [handleKeyDown]);
 
-  // Get icon component based on command config
   const getCommandIcon = (command: CommandItem) => {
     switch (command.icon) {
-      case "chat":
-        return <Terminal className="w-3.5 h-3.5" />;
       case "call":
         return <Clock className="w-3.5 h-3.5" />;
+      case "replay":
+        return <RefreshCw className="w-3.5 h-3.5" />;
+      case "command":
       case "terminal":
         return <Command className="w-3.5 h-3.5" />;
-      // Add cases for other icons if needed (navigation, etc.)
-      // case "home": ...
-      // case "projects": ...
+      case "home":
+        return <Home className="w-3.5 h-3.5" />;
+      case "projects":
+        return <Layers className="w-3.5 h-3.5" />;
+      case "skills":
+        return <Lightbulb className="w-3.5 h-3.5" />;
+      case "contact":
+        return <Mail className="w-3.5 h-3.5" />;
       default:
-        return <Search className="w-3.5 h-3.5" />; // Default icon
+        return <Search className="w-3.5 h-3.5" />;
     }
   };
 
@@ -145,7 +263,7 @@ const CommandPalette = ({ isOpen, onClose, commands }: CommandPaletteProps) => {
   return (
     <div
       className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-start justify-center pt-[20vh]"
-      onClick={onClose} // Close when clicking the overlay
+      onClick={onClose}
     >
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -166,7 +284,7 @@ const CommandPalette = ({ isOpen, onClose, commands }: CommandPaletteProps) => {
           />
           <div className="flex gap-1 text-xs w-full justify-end">
             <span className="bg-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-mono">
-              Ctrl/⌘K
+              ctrl/⌘K
             </span>
           </div>
         </div>

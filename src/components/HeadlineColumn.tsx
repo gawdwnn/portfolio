@@ -16,22 +16,28 @@ import {
   Github,
   Linkedin,
   Mail,
-  Terminal,
   Users,
 } from "lucide-react";
 import AnimatedTextCycle from "./AnimatedTextCycle";
+import { useCommandPalette } from "./CommandPaletteProvider";
 
 interface HeadlineColumnProps {
-  onShowChat: () => void;
   onBookCallClick: () => void;
-  onShowCommandPalette: () => void;
 }
 
-const HeadlineColumn = ({
-  onShowChat,
-  onBookCallClick,
-  onShowCommandPalette,
-}: HeadlineColumnProps) => {
+const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
+  const { open: openCommandPalette } = useCommandPalette();
+
+  const words = [
+    "Product Engineer",
+    "Full-Stack Engineer",
+    "Frontend Engineer",
+    "Backend Engineer",
+    "AI Agent Specialist",
+    "Design System Expert",
+    "Generative AI",
+  ];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -39,9 +45,7 @@ const HeadlineColumn = ({
       transition={{ duration: 0.6, delay: 0.3 }}
       className="relative order-1 lg:order-2 flex flex-col items-center lg:items-start text-center lg:text-left"
     >
-      {/* Content needs to be relatively positioned to sit above particles */}
       <div className="relative z-10 flex flex-col items-center lg:items-start w-full">
-        {/* Enhanced Professional Title Badge */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -50,15 +54,7 @@ const HeadlineColumn = ({
         >
           <GitBranch className="w-3.5 h-3.5 opacity-80" />
           <span className="text-xs text-white/60">
-            <AnimatedTextCycle
-              words={[
-                "Full-Stack Engineer",
-                "Frontend Engineer",
-                "Backend Engineer",
-                "AI Agents Specialist",
-                "Product Engineer",
-              ]}
-            />
+            <AnimatedTextCycle words={words} constrainWidth={true} />
           </span>
         </motion.div>
 
@@ -74,7 +70,7 @@ const HeadlineColumn = ({
             >
               <motion.path
                 d="M0,0 C20,10 50,10 100,0"
-                stroke="url(#gradient-line-headline)" // Renamed gradient ID
+                stroke="url(#gradient-line-headline)"
                 strokeWidth="2"
                 fill="none"
                 initial={{ pathLength: 0 }}
@@ -83,7 +79,7 @@ const HeadlineColumn = ({
               />
               <defs>
                 <linearGradient
-                  id="gradient-line-headline" // Renamed gradient ID
+                  id="gradient-line-headline"
                   x1="0%"
                   y1="0%"
                   x2="100%"
@@ -103,65 +99,7 @@ const HeadlineColumn = ({
           functionality. Let's transform your ideas into reality.
         </p>
 
-        {/* Action Buttons mirroring terminal options */}
-        <TooltipProvider delayDuration={100}>
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.4 }}
-            className="flex flex-col sm:flex-row items-center lg:items-start gap-3 mb-8 w-full max-w-md"
-          >
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={onShowChat}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 sm:p-2 rounded-md bg-indigo-600/80 hover:bg-indigo-600 text-white text-sm font-medium transition-colors border border-indigo-500/50 shadow-sm"
-                  aria-label="Chat with me"
-                >
-                  <Terminal className="w-4 h-4" />
-                  <span className="sm:hidden">Chat with me</span>
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Chat with me</p>
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={onBookCallClick}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 sm:p-2 rounded-md bg-white/5 hover:bg-white/10 text-white/80 hover:text-white text-sm font-medium transition-colors border border-white/10"
-                  aria-label="Schedule a call"
-                >
-                  <Clock className="w-4 h-4" />
-                  <span className="sm:hidden">Schedule a call</span>
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Schedule a call</p>
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={onShowCommandPalette}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 sm:p-2 rounded-md bg-white/5 hover:bg-white/10 text-white/80 hover:text-white text-sm font-medium transition-colors border border-white/10"
-                  aria-label="Open Command Palette"
-                >
-                  <Command className="w-4 h-4" />
-                  <span className="sm:hidden">Command Palette (Ctrl/⌘K)</span>
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Command Palette (Ctrl/⌘K)</p>
-              </TooltipContent>
-            </Tooltip>
-          </motion.div>
-        </TooltipProvider>
-
-        <div className="grid grid-cols-2 gap-4 w-full max-w-md mt-4 mb-4">
+        <div className="grid grid-cols-2 gap-4 w-full max-w-md mt-4 mb-6">
           {/* Stat Card 1: Years Experience */}
           <motion.div
             className="bg-white/5 border border-white/10 rounded-lg p-4 group"
@@ -227,80 +165,121 @@ const HeadlineColumn = ({
           </motion.div>
         </div>
 
-        {/* Social Media Links */}
+        {/* Social links */}
         <TooltipProvider delayDuration={100}>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.5 }}
-            className="flex items-center gap-4 mb-4 mt-4"
-          >
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a
-                  href="https://github.com/gawdwnn/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white/60 hover:text-white transition-colors"
-                  aria-label="GitHub"
-                >
-                  <Github className="w-5 h-5" />
-                </a>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>View GitHub Profile</p>
-              </TooltipContent>
-            </Tooltip>
+          <div className="flex items-center justify-between w-full max-w-md mt-4 mb-6">
+            {/* Social Media Links */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.5 }}
+              className="flex items-center gap-4"
+            >
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <a
+                    href="https://github.com/gawdwnn/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white/60 hover:text-white transition-colors"
+                    aria-label="GitHub"
+                  >
+                    <Github className="w-5 h-5" />
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>View GitHub Profile</p>
+                </TooltipContent>
+              </Tooltip>
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a
-                  href="https://www.linkedin.com/in/gawdwnn/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white/60 hover:text-white transition-colors"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </a>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Connect/Chat on LinkedIn</p>
-              </TooltipContent>
-            </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <a
+                    href="https://www.linkedin.com/in/gawdwnn/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white/60 hover:text-white transition-colors"
+                    aria-label="LinkedIn"
+                  >
+                    <Linkedin className="w-5 h-5" />
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Connect/Chat on LinkedIn</p>
+                </TooltipContent>
+              </Tooltip>
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a
-                  href="mailto:gawdwnn@gmail.com"
-                  className="text-white/60 hover:text-white transition-colors"
-                  aria-label="Email"
-                >
-                  <Mail className="w-5 h-5" />
-                </a>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Send an Email</p>
-              </TooltipContent>
-            </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <a
+                    href="mailto:gawdwnn@gmail.com"
+                    className="text-white/60 hover:text-white transition-colors"
+                    aria-label="Email"
+                  >
+                    <Mail className="w-5 h-5" />
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Send an Email</p>
+                </TooltipContent>
+              </Tooltip>
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a
-                  href="https://docs.google.com/document/d/e/2PACX-1vTSZD4HTB4DCnJjt-xK7f6ocd8nVNcoh7MxJ7BGo214MzNxWXIPY3RFaEe-LAwtfmEcIuRBluYvMClq/pub"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white/60 hover:text-white transition-colors"
-                  aria-label="Resume"
-                >
-                  <Download className="w-5 h-5" />
-                </a>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>View Resume</p>
-              </TooltipContent>
-            </Tooltip>
-          </motion.div>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <a
+                    href="https://docs.google.com/document/d/e/2PACX-1vTSZD4HTB4DCnJjt-xK7f6ocd8nVNcoh7MxJ7BGo214MzNxWXIPY3RFaEe-LAwtfmEcIuRBluYvMClq/pub"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white/60 hover:text-white transition-colors"
+                    aria-label="Resume"
+                  >
+                    <Download className="w-5 h-5" />
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>View Resume</p>
+                </TooltipContent>
+              </Tooltip>
+            </motion.div>
+
+            {/* Action Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.4 }}
+              className="flex items-center gap-3"
+            >
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={onBookCallClick}
+                    className="flex items-center justify-center gap-2 p-2 rounded-md bg-indigo-600/80 hover:bg-indigo-600 text-white text-sm font-medium transition-colors border border-indigo-500/50 shadow-sm"
+                    aria-label="Schedule a call"
+                  >
+                    <Clock className="w-4 h-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Schedule a call</p>
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={openCommandPalette}
+                    className="flex items-center justify-center gap-2 p-2 rounded-md bg-white/5 hover:bg-white/10 text-white/80 hover:text-white text-sm font-medium transition-colors border border-white/10"
+                    aria-label="Open Command Palette"
+                  >
+                    <Command className="w-4 h-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Command Palette (ctrl/⌘K)</p>
+                </TooltipContent>
+              </Tooltip>
+            </motion.div>
+          </div>
         </TooltipProvider>
       </div>
     </motion.div>

@@ -7,29 +7,6 @@ export interface TerminalResponse {
   response: string | ReactNode;
 }
 
-/**
- * InteractiveTerminal Component
- *
- * A reusable terminal component that supports user interaction through command input.
- *
- * Features:
- * - Displays initial content (can be used for welcome messages or introductions)
- * - Provides a command prompt for user input
- * - Processes commands against a predefined set of available commands
- * - Maintains a history of commands and responses
- * - Supports custom styling through various props
- *
- * Behavior:
- * - Commands are entered in a text input field
- * - When a command is submitted (with Enter key), it's processed against availableCommands
- * - If a command is recognized, its corresponding response is displayed
- * - If not recognized, a default message is shown
- * - The "clear" command is special and clears the command history
- * - Command history is maintained and displayed in order
- *
- * This component serves as the basis for text-based terminal interfaces like those
- * used in the About section.
- */
 interface InteractiveTerminalProps {
   title?: string;
   titleContent?: ReactNode;

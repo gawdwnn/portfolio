@@ -1,20 +1,6 @@
 import { cn } from "@/lib/utils";
 import React, { ReactNode } from "react";
 
-/**
- * TerminalWindow Component
- *
- * A base UI component that provides the visual shell for all terminal interfaces.
- *
- * Features:
- * - Provides the frame, header, and content area for terminal UIs
- * - Includes the classic colored window control dots
- * - Supports customization of header style and title content
- * - Serves as the foundation for other terminal components
- *
- * This component is used by InteractiveTerminal and TerminalSequence to provide
- * consistent visual styling across different terminal behaviors.
- */
 interface TerminalWindowProps {
   children: React.ReactNode;
   title?: string;
@@ -23,7 +9,6 @@ interface TerminalWindowProps {
   titleContent?: ReactNode;
 }
 
-// Base UI for terminal appearance
 const TerminalWindow: React.FC<TerminalWindowProps> = ({
   children,
   title = "terminal",

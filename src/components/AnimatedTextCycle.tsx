@@ -1,31 +1,70 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 interface AnimatedTextCycleProps {
   words: string[];
   interval?: number;
   className?: string;
+  constrainWidth?: boolean;
 }
 
 export default function AnimatedTextCycle({
   words,
   interval = 4000,
   className = "",
+  constrainWidth = false,
 }: AnimatedTextCycleProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [width, setWidth] = useState("auto");
   const measureRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Update width when window resizes
+  useEffect(() => {
+    const handleResize = () => {
+      updateWidth(currentIndex);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [currentIndex]);
 
   // Get the width of the current word
-  useEffect(() => {
+  const updateWidth = (index: number) => {
+    // Skip width calculation if we're using parent container width constraints
+    if (constrainWidth) {
+      setWidth("100%");
+      return;
+    }
+
     if (measureRef.current) {
       const elements = measureRef.current.children;
-      if (elements.length > currentIndex) {
-        const newWidth = elements[currentIndex].getBoundingClientRect().width;
-        setWidth(`${newWidth}px`);
+      if (elements.length > index) {
+        // Get parent width to ensure we don't exceed it
+        const parentWidth =
+          containerRef.current?.parentElement?.getBoundingClientRect().width ||
+          0;
+        let measuredWidth = elements[index].getBoundingClientRect().width;
+
+        // Cap the width to parent container width
+        if (parentWidth > 0 && measuredWidth > parentWidth) {
+          measuredWidth = parentWidth;
+        }
+
+        setWidth(`${measuredWidth}px`);
       }
     }
-  }, [currentIndex]);
+  };
+
+  // Use useLayoutEffect to calculate width before browser paint
+  useLayoutEffect(() => {
+    // Wait a tiny bit for the DOM to fully settle
+    const timer = setTimeout(() => {
+      updateWidth(currentIndex);
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, [currentIndex, constrainWidth]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -61,17 +100,22 @@ export default function AnimatedTextCycle({
     },
   };
 
+  // Determine styling for text items
+  const textStyle = constrainWidth
+    ? { whiteSpace: "normal", width: "100%" }
+    : { whiteSpace: "nowrap" };
+
   return (
-    <>
+    <div ref={containerRef} style={{ width: "100%" }}>
       {/* Hidden measurement div with all words rendered */}
       <div
         ref={measureRef}
         aria-hidden="true"
         className="absolute opacity-0 pointer-events-none"
-        style={{ visibility: "hidden" }}
+        style={{ visibility: "hidden", maxWidth: "100%" }}
       >
         {words.map((word, i) => (
-          <span key={i} className={className}>
+          <span key={i} className={className} style={textStyle}>
             {word}
           </span>
         ))}
@@ -80,6 +124,7 @@ export default function AnimatedTextCycle({
       {/* Visible animated word */}
       <motion.span
         className="relative inline-block"
+        style={{ maxWidth: "100%", display: "block" }}
         animate={{
           width,
           transition: {
@@ -97,12 +142,12 @@ export default function AnimatedTextCycle({
             initial="hidden"
             animate="visible"
             exit="exit"
-            style={{ whiteSpace: "nowrap" }}
+            style={textStyle}
           >
             {words[currentIndex]}
           </motion.span>
         </AnimatePresence>
       </motion.span>
-    </>
+    </div>
   );
 }

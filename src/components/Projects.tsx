@@ -328,7 +328,6 @@ interface ProjectsProps {
 }
 
 export default function Projects({ id }: ProjectsProps) {
-  // Example project data - replace with real data
   const projects = [
     {
       title: "Intelligent Document Analyzer",

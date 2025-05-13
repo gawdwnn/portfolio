@@ -1,21 +1,11 @@
 import { cn } from "@/lib/utils";
+import { TerminalOption } from "@/types/terminal";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Clock, Command, Terminal } from "lucide-react";
+import { ArrowUpRight, Clock, Command, RefreshCw } from "lucide-react";
 
-/**
- * TerminalOptionMenu Component
- *
- * Displays a menu of interactive terminal options with selection feedback.
- *
- * Features:
- * - Shows three option buttons: Chat, Schedule Call, and Command Palette
- * - Handles option selection with visual feedback
- * - Triggers callbacks when options are selected
- * - Shows a helpful shortcut tip
- */
 interface TerminalOptionMenuProps {
-  selectedOption: number | null;
-  handleOptionSelect: (option: number) => void;
+  selectedOption: TerminalOption | null;
+  handleOptionSelect: (option: TerminalOption) => void;
 }
 
 const TerminalOptionMenu: React.FC<TerminalOptionMenuProps> = ({
@@ -35,18 +25,18 @@ const TerminalOptionMenu: React.FC<TerminalOptionMenuProps> = ({
         <div className="text-cyan-300 mb-3">Select an option:</div>
 
         <div className="space-y-2 font-mono">
-          {/* Chat option */}
+          {/* Book call option */}
           <div
             className={cn(
-              "group flex items-center gap-3 py-2 px-3 rounded cursor-pointer transition-colors relative",
-              selectedOption === 1
+              "group flex items-center gap-3 py-2 px-3 rounded cursor-pointer transition-colors",
+              selectedOption === TerminalOption.CALL
                 ? "bg-indigo-600"
                 : "hover:bg-white/5 border border-indigo-500/30"
             )}
-            onClick={() => handleOptionSelect(1)}
+            onClick={() => handleOptionSelect(TerminalOption.CALL)}
           >
             <div className="w-5 h-5 flex items-center justify-center">
-              {selectedOption === 1 ? (
+              {selectedOption === TerminalOption.CALL ? (
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -60,24 +50,24 @@ const TerminalOptionMenu: React.FC<TerminalOptionMenuProps> = ({
               <span className="text-indigo-400 font-semibold group-hover:text-white transition-colors">
                 [1]
               </span>
-              <Terminal className="w-4 h-4 text-indigo-200" />
-              <span className="text-white">Chat with me</span>
+              <Clock className="w-4 h-4 text-indigo-200" />
+              <span className="text-white">Schedule a call</span>
             </div>
             <ArrowUpRight className="w-3 h-3 text-indigo-300 opacity-0 group-hover:opacity-100 transition-opacity ml-auto" />
           </div>
 
-          {/* Book call option */}
+          {/* Command palette option */}
           <div
             className={cn(
               "group flex items-center gap-3 py-2 px-3 rounded cursor-pointer transition-colors",
-              selectedOption === 2
+              selectedOption === TerminalOption.COMMAND_PALETTE
                 ? "bg-indigo-600"
                 : "hover:bg-white/5 border border-indigo-500/30"
             )}
-            onClick={() => handleOptionSelect(2)}
+            onClick={() => handleOptionSelect(TerminalOption.COMMAND_PALETTE)}
           >
             <div className="w-5 h-5 flex items-center justify-center">
-              {selectedOption === 2 ? (
+              {selectedOption === TerminalOption.COMMAND_PALETTE ? (
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -91,24 +81,24 @@ const TerminalOptionMenu: React.FC<TerminalOptionMenuProps> = ({
               <span className="text-indigo-400 font-semibold group-hover:text-white transition-colors">
                 [2]
               </span>
-              <Clock className="w-4 h-4 text-indigo-200" />
-              <span className="text-white">Schedule a call</span>
+              <Command className="w-4 h-4 text-indigo-200" />
+              <span className="text-white">Command palette</span>
             </div>
             <ArrowUpRight className="w-3 h-3 text-indigo-300 opacity-0 group-hover:opacity-100 transition-opacity ml-auto" />
           </div>
 
-          {/* Command palette option */}
+          {/* Replay animation option */}
           <div
             className={cn(
               "group flex items-center gap-3 py-2 px-3 rounded cursor-pointer transition-colors",
-              selectedOption === 3
+              selectedOption === TerminalOption.REPLAY
                 ? "bg-indigo-600"
                 : "hover:bg-white/5 border border-indigo-500/30"
             )}
-            onClick={() => handleOptionSelect(3)}
+            onClick={() => handleOptionSelect(TerminalOption.REPLAY)}
           >
             <div className="w-5 h-5 flex items-center justify-center">
-              {selectedOption === 3 ? (
+              {selectedOption === TerminalOption.REPLAY ? (
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -122,8 +112,8 @@ const TerminalOptionMenu: React.FC<TerminalOptionMenuProps> = ({
               <span className="text-indigo-400 font-semibold group-hover:text-white transition-colors">
                 [3]
               </span>
-              <Command className="w-4 h-4 text-indigo-200" />
-              <span className="text-white">Command palette</span>
+              <RefreshCw className="w-4 h-4 text-indigo-200" />
+              <span className="text-white">Replay intro</span>
             </div>
             <ArrowUpRight className="w-3 h-3 text-indigo-300 opacity-0 group-hover:opacity-100 transition-opacity ml-auto" />
           </div>
@@ -138,7 +128,7 @@ const TerminalOptionMenu: React.FC<TerminalOptionMenuProps> = ({
 
       {/* Shortcut hint */}
       <div className="mt-4 text-neutral-500 text-xs">
-        Tip: Press <span className="text-indigo-400">Ctrl/⌘K</span> for command
+        Tip: Press <span className="text-indigo-400">ctrl/⌘K</span> for command
         palette
       </div>
     </div>

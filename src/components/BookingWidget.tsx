@@ -21,7 +21,6 @@ export default function BookingWidget({ onClose, eventSlug, username }: BookingW
             eventSlug={eventSlug}
             username={username}
             onCreateBookingSuccess={() => {
-              console.log('booking created successfully');
               onClose();
             }}
           />

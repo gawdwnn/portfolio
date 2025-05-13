@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const TypewriterText = ({
   text,
@@ -16,6 +16,14 @@ const TypewriterText = ({
 }) => {
   const [displayedText, setDisplayedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const completedRef = useRef(false);
+
+  useEffect(() => {
+    // Reset state when text changes
+    setDisplayedText("");
+    setCurrentIndex(0);
+    completedRef.current = false;
+  }, [text]);
 
   useEffect(() => {
     if (currentIndex < text.length) {
@@ -25,11 +33,15 @@ const TypewriterText = ({
       }, speed);
 
       return () => clearTimeout(timeout);
-    } else if (onComplete) {
+    } else if (onComplete && !completedRef.current) {
+      // Only trigger onComplete once per text animation
+      completedRef.current = true;
+
       // Call onComplete slightly after the last character is added
       const completeTimeout = setTimeout(() => {
         onComplete();
       }, speed);
+
       return () => clearTimeout(completeTimeout);
     }
   }, [currentIndex, text, speed, onComplete]);

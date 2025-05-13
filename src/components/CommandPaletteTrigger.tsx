@@ -18,7 +18,7 @@ const CommandPaletteTrigger = ({ onClick }: CommandPaletteTriggerProps) => {
         className="group flex items-center gap-2 text-xs text-white/60 hover:text-white px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
       >
         <Command className="w-3.5 h-3.5" />
-        <span>Ctrl/⌘K</span>
+        <span>ctrl/⌘K</span>
       </button>
     </motion.div>
   );

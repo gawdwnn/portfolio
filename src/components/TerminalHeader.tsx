@@ -1,11 +1,6 @@
 import { Waves } from "lucide-react";
 import React from "react";
 
-/**
- * TerminalHeader Component
- *
- * A simple header component for the terminal that displays a title and version.
- */
 const TerminalHeader: React.FC = () => {
   return (
     <div className="flex items-center gap-2 mb-6 text-indigo-400">
