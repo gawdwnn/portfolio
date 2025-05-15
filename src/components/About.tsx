@@ -1,12 +1,13 @@
 "use client";
 
+import { HoverBorderGradient } from "@/components/HoverBorderGradient";
+import InteractiveTerminal from "@/components/InteractiveTerminal";
+import TypewriterText from "@/components/TypewriterText";
+import { personalInfo } from "@/data";
 import { motion } from "framer-motion";
 import { Code, Github, Globe, Mail, Terminal, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
-import { HoverBorderGradient } from "@/components/HoverBorderGradient";
-import InteractiveTerminal from "@/components/InteractiveTerminal";
-import TypewriterText from "@/components/TypewriterText";
 
 interface AboutProps {
   id?: string;
@@ -31,7 +32,7 @@ export default function About({ id }: AboutProps) {
       "• 5 years of Software Engineering\n• Led feature development in agile teams\n• Built scalable solutions for B2B and B2C startups",
     education:
       "• Software Development, Conestoga College, Waterloo\n• Continuing education in AI and Machine Learning",
-    contact: "Email: gawdwnn@gmail.com\nGitHub: github.com/gawdwnn",
+    contact: `Email: ${personalInfo.email}\nGitHub: ${personalInfo.github}`,
     clear: "CLEAR_COMMAND",
   };
 
@@ -46,12 +47,9 @@ export default function About({ id }: AboutProps) {
     if (!animationStarted) return;
 
     if (terminalStage > 0 && terminalStage < 3) {
-      const timer = setTimeout(
-        () => {
-          setTerminalStage((prev) => prev + 1);
-        },
-        1500
-      );
+      const timer = setTimeout(() => {
+        setTerminalStage((prev) => prev + 1);
+      }, 1500);
       return () => clearTimeout(timer);
     }
   }, [terminalStage, animationStarted]);
@@ -98,27 +96,26 @@ export default function About({ id }: AboutProps) {
           <div className="mt-3 pl-4 border-l-2 border-indigo-500/30">
             <div className="flex items-center mb-2">
               <User className="w-4 h-4 mr-2 text-indigo-400" />
-              <TypewriterText text="Godwin" speed={50} />
+              <TypewriterText text={personalInfo.name} speed={50} />
             </div>
             <div className="flex items-center mb-2">
               <Code className="w-4 h-4 mr-2 text-indigo-400" />
-              <TypewriterText text="Software Engineer" speed={50} />
+              <TypewriterText text={personalInfo.title} speed={50} />
             </div>
             <div className="flex items-center mb-2">
               <Globe className="w-4 h-4 mr-2 text-indigo-400" />
-              <TypewriterText text="Waterloo, ON CA" speed={50} />
+              <TypewriterText text={personalInfo.location} speed={50} />
             </div>
           </div>
         </div>
       );
     }
 
-    //TODO: modify this bio content to be a great elevator pitch
     if (terminalStage >= 3) {
       content.push(
         <TypewriterText
           key="bio"
-          text="I'm a full-stack Software Engineer with 5 years of experience building scalable applications. I specialize in TypeScript and Python, with expertise in modern web technologies and cloud infrastructure. My approach combines technical excellence with practical problem-solving - I've successfully delivered complex features for both B2B and B2C startups, often leading development from concept to deployment. I'm passionate about writing clean, maintainable code and creating solutions that make a real impact."
+          text={personalInfo.bio}
           speed={10}
           className="text-gray-300 mt-4"
           onComplete={() => setTerminalStage(4)}
@@ -183,7 +180,7 @@ export default function About({ id }: AboutProps) {
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
               <HoverBorderGradient
                 as="a"
-                href="mailto:gawdwnn@gmail.com"
+                href={`mailto:${personalInfo.email}`}
                 containerClassName="rounded-full"
                 className="bg-indigo-600 text-white font-semibold px-6 py-3 flex items-center"
                 duration={1.5}
@@ -194,7 +191,7 @@ export default function About({ id }: AboutProps) {
 
               <HoverBorderGradient
                 as="a"
-                href="https://github.com/gawdwnn"
+                href={`https://${personalInfo.github}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 containerClassName="rounded-full"

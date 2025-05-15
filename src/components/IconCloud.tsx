@@ -17,7 +17,7 @@ export const cloudProps: Omit<ICloud, "children"> = {
       justifyContent: "center",
       alignItems: "center",
       width: "100%",
-      // paddingTop: 40,
+      paddingTop: 40,
     },
   },
   options: {
@@ -79,7 +79,6 @@ export function IconCloud({ iconSlugs }: DynamicCloudProps) {
   }, [data, theme]);
 
   return (
-    // @ts-ignore - Type mismatch with cloud props is expected
     <Cloud {...cloudProps}>
       <>{renderedIcons}</>
     </Cloud>

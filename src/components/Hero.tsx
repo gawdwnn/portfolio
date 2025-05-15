@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
-import { useSpotlightEffect } from "@/hooks/useSpotlightEffect";
-import { useTerminalState } from "@/hooks/useTerminalState";
 import { useCommandPalette } from "@/components/CommandPaletteProvider";
 import HeadlineColumn from "@/components/HeadlineColumn";
 import HeroBackground from "@/components/HeroBackground";
 import TerminalColumn from "@/components/TerminalColumn";
+import { terminalCommands } from "@/data";
+import { useSpotlightEffect } from "@/hooks/useSpotlightEffect";
+import { useTerminalState } from "@/hooks/useTerminalState";
+import { useEffect, useMemo } from "react";
 
 interface HeroProps {
   onBookCallClick: () => void;
@@ -18,29 +19,7 @@ export default function Hero({ onBookCallClick, id }: HeroProps) {
   const { open: openCommandPalette } = useCommandPalette();
 
   // Memoize steps array so it doesn't change on every render
-  const steps = useMemo(
-    () => [
-      {
-        command: "whoami",
-        output: ["Godwin O.", "Product Engineer & AI Agents Specialist"],
-      },
-      {
-        command: "cat skills.txt",
-        output: [
-          "Next.js • React • TypeScript • AI Integration",
-          "Design Systems • API Development • Cloud Architecture",
-        ],
-      },
-      {
-        command: "echo $MISSION",
-        output: [
-          "Building great products that solve real problems",
-          "at the intersection of design, code and AI.",
-        ],
-      },
-    ],
-    []
-  );
+  const steps = useMemo(() => terminalCommands, []);
 
   const {
     activeStep,
