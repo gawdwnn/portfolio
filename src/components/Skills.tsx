@@ -1,9 +1,10 @@
 "use client";
 
+import { Tiles } from "@/components/Tiles";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
-import { Tiles } from "@/components/Tiles";
 
 interface SkillsProps {
   id?: string;
@@ -126,8 +127,8 @@ export default function Skills({ id }: SkillsProps) {
     useState<(typeof tabs)[number]["id"]>("skills");
   const controls = useAnimation();
 
-  const handleTabChange = useCallback((tabId: (typeof tabs)[number]["id"]) => {
-    setActiveTab(tabId);
+  const handleTabChange = useCallback((value: string) => {
+    setActiveTab(value as (typeof tabs)[number]["id"]);
   }, []);
 
   useEffect(() => {
@@ -252,37 +253,43 @@ export default function Skills({ id }: SkillsProps) {
 
         {/* Tab Navigation */}
         <div className="flex justify-center mb-12">
-          <div className="inline-flex p-1 bg-neutral-900 border border-neutral-800 rounded-lg">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => handleTabChange(tab.id)}
-                className={cn(
-                  "px-4 py-2 text-sm font-medium rounded-md transition-all",
-                  activeTab === tab.id
-                    ? "bg-blue-600 text-white shadow-lg"
-                    : "text-neutral-400 hover:text-white"
-                )}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
+          <Tabs
+            value={activeTab}
+            onValueChange={handleTabChange}
+            className="w-full flex flex-col items-center"
+          >
+            <TabsList className="bg-neutral-900 border border-neutral-800 rounded-lg p-1 inline-flex">
+              {tabs.map((tab) => (
+                <TabsTrigger
+                  key={tab.id}
+                  value={tab.id}
+                  className={cn(
+                    "px-4 py-2 text-sm font-medium rounded-md transition-all",
+                    activeTab === tab.id
+                      ? "bg-blue-600 text-white shadow-lg"
+                      : "text-neutral-400 hover:text-white"
+                  )}
+                >
+                  {tab.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
 
-        {/* Tab Content */}
-        <div className="min-h-[400px]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.2 }}
-            >
-              {renderTabContent()}
-            </motion.div>
-          </AnimatePresence>
+            {/* Tab Content */}
+            <div className="min-h-[400px] mt-8 w-full">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {renderTabContent()}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </Tabs>
         </div>
       </div>
     </section>
