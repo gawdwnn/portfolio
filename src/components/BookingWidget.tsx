@@ -1,7 +1,15 @@
-'use client';
+"use client";
 
-import { Booker } from '@calcom/atoms';
-import { X } from 'lucide-react';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import Cal, { getCalApi } from "@calcom/embed-react";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 interface BookingWidgetProps {
   onClose: () => void;
@@ -9,23 +17,49 @@ interface BookingWidgetProps {
   username: string;
 }
 
-export default function BookingWidget({ onClose, eventSlug, username }: BookingWidgetProps) {
+export default function BookingWidget({
+  onClose,
+  eventSlug,
+  username,
+}: BookingWidgetProps) {
+  useEffect(() => {
+    (async function () {
+      const cal = await getCalApi();
+      cal?.("on", {
+        action: "bookingSuccessful",
+        callback: () => {
+          toast.success("Booking successful! We'll be in touch soon.");
+          onClose();
+        },
+      });
+    })();
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 bg-black/60 flex justify-end z-50">
-      <div className="w-full sm:w-96 h-full bg-background p-4 flex flex-col">
-        <button onClick={onClose} className="self-end text-foreground hover:text-primary mb-2">
-          <X className="w-6 h-6" />
-        </button>
-        <div className="flex-1 overflow-y-auto">
-          <Booker
-            eventSlug={eventSlug}
-            username={username}
-            onCreateBookingSuccess={() => {
-              onClose();
+    <Sheet open={true} onOpenChange={onClose}>
+      <SheetContent
+        side="right"
+        className="w-full sm:w-[800px] p-0 border-l bg-background"
+      >
+        <SheetHeader className="p-4 border-b">
+          <SheetTitle className="text-xl font-semibold">
+            Schedule a Call
+          </SheetTitle>
+          <SheetDescription>
+            Choose a time that works best for you
+          </SheetDescription>
+        </SheetHeader>
+
+        <div className="flex-1 h-[calc(100vh-8rem)] overflow-y-auto">
+          <Cal
+            calLink={`${username}/${eventSlug}`}
+            config={{
+              hideEventTypeDetails: "false",
+              layout: "month_view",
             }}
           />
         </div>
-      </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   );
 }

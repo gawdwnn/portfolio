@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect } from "react";
-import CommandLine from "./CommandLine";
-import TerminalWindow from "./TerminalWindow";
-import TypewriterText from "./TypewriterText";
+import CommandLine from "@/components/CommandLine";
+import TerminalWindow from "@/components/TerminalWindow";
+import TypewriterText from "@/components/TypewriterText";
 
 export interface Step {
   command: string;

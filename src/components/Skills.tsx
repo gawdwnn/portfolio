@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
-import { Tiles } from "./Tiles";
+import { Tiles } from "@/components/Tiles";
 
 interface SkillsProps {
   id?: string;

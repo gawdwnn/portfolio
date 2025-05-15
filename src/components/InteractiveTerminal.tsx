@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { KeyboardEvent, ReactNode, useState } from "react";
-import TerminalWindow from "./TerminalWindow";
+import TerminalWindow from "@/components/TerminalWindow";
 
 export interface TerminalResponse {
   command: string;

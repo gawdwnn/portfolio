@@ -1,17 +1,16 @@
 "use client";
 
 import About from "@/components/About";
-import CommandPaletteProvider from "@/components/CommandPaletteProvider";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
-import ModalProvider, { useModal } from "@/components/ModalProvider";
+import { useModal } from "@/components/ModalProvider";
 import ParticleBackground from "@/components/ParticleBackground";
 import Projects from "@/components/Projects";
 import Skills from "@/components/Skills";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-function HomeContent() {
+export default function Home() {
   const { openBookingModal } = useModal();
 
   const containerVariants = {
@@ -37,7 +36,7 @@ function HomeContent() {
       scale: 1,
       transition: {
         duration: 0.6,
-        ease: [0.22, 1, 0.36, 1], // Custom easing for smoother motion
+        ease: [0.22, 1, 0.36, 1],
       },
     },
   };
@@ -53,7 +52,6 @@ function HomeContent() {
         setScrollProgress(currentProgress);
       };
 
-      // Initialize on mount
       handleScroll();
 
       window.addEventListener("scroll", handleScroll);
@@ -69,76 +67,66 @@ function HomeContent() {
   };
 
   return (
-    <CommandPaletteProvider onScheduleCall={openBookingModal}>
-      <main className="flex min-h-screen flex-col text-foreground overflow-x-hidden antialiased relative">
-        {/* Particle Background - placed as a background for the entire app */}
-        <ParticleBackground />
+    <main className="flex min-h-screen flex-col text-foreground overflow-x-hidden antialiased relative">
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ amount: 0.1 }}
-          variants={containerVariants}
-        >
-          <motion.div variants={itemVariants}>
-            <Hero id="hero-section" onBookCallClick={openBookingModal} />
-          </motion.div>
+      <ParticleBackground />
+
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ amount: 0.1 }}
+        variants={containerVariants}
+      >
+        <motion.div variants={itemVariants}>
+          <Hero id="hero-section" onBookCallClick={openBookingModal} />
         </motion.div>
+      </motion.div>
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ amount: 0.1 }}
-          variants={containerVariants}
-        >
-          <motion.div variants={itemVariants}>
-            <Projects id="projects-section" />
-          </motion.div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ amount: 0.1 }}
+        variants={containerVariants}
+      >
+        <motion.div variants={itemVariants}>
+          <Projects id="projects-section" />
         </motion.div>
+      </motion.div>
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ amount: 0.1 }}
-          variants={containerVariants}
-        >
-          <motion.div variants={itemVariants}>
-            <Skills id="skills-section" />
-          </motion.div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ amount: 0.1 }}
+        variants={containerVariants}
+      >
+        <motion.div variants={itemVariants}>
+          <Skills id="skills-section" />
         </motion.div>
+      </motion.div>
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ amount: 0.1 }}
-          variants={containerVariants}
-        >
-          <motion.div variants={itemVariants}>
-            <About id="about-section" />
-          </motion.div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ amount: 0.1 }}
+        variants={containerVariants}
+      >
+        <motion.div variants={itemVariants}>
+          <About id="about-section" />
         </motion.div>
+      </motion.div>
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ amount: 0.1 }}
-          variants={containerVariants}
-        >
-          <motion.div variants={itemVariants}>
-            <Footer />
-          </motion.div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ amount: 0.1 }}
+        variants={containerVariants}
+      >
+        <motion.div variants={itemVariants}>
+          <Footer />
         </motion.div>
+      </motion.div>
 
-        <ScrollProgress />
-      </main>
-    </CommandPaletteProvider>
-  );
-}
-
-export default function Home() {
-  return (
-    <ModalProvider>
-      <HomeContent />
-    </ModalProvider>
+      <ScrollProgress />
+    </main>
   );
 }

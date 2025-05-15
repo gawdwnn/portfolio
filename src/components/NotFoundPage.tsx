@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { AlertTriangle, Home, Terminal } from "lucide-react";
 import { useRouter } from "next/navigation";
-import TerminalWindow from "./TerminalWindow";
-import TypewriterText from "./TypewriterText";
+import TerminalWindow from "@/components/TerminalWindow";
+import TypewriterText from "@/components/TypewriterText";
 
 export function NotFoundPage() {
   const router = useRouter();

@@ -1,21 +1,20 @@
 "use client";
 
-import { CalProvider } from "@calcom/atoms";
+import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
+import CommandPaletteProvider from "@/components/CommandPaletteProvider";
+import ModalProvider from "@/components/ModalProvider";
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider attribute="class">
-      <CalProvider
-        clientId={process.env.CAL_OAUTH_CLIENT_ID!}
-        options={{
-          apiUrl: process.env.CAL_API_URL!,
-          refreshUrl: process.env.REFRESH_URL!,
-        }}
-      >
-        {children}
-      </CalProvider>
+      <ModalProvider>
+        <CommandPaletteProvider>
+          {children}
+          <Toaster />
+        </CommandPaletteProvider>
+      </ModalProvider>
     </ThemeProvider>
   );
 }

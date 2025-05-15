@@ -18,8 +18,8 @@ import {
   Mail,
   Users,
 } from "lucide-react";
-import AnimatedTextCycle from "./AnimatedTextCycle";
-import { useCommandPalette } from "./CommandPaletteProvider";
+import AnimatedTextCycle from "@/components/AnimatedTextCycle";
+import { useCommandPalette } from "@/components/CommandPaletteProvider";
 
 interface HeadlineColumnProps {
   onBookCallClick: () => void;

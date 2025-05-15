@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 import { Code, Github, Globe, Mail, Terminal, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
-import { HoverBorderGradient } from "./HoverBorderGradient";
-import InteractiveTerminal from "./InteractiveTerminal";
-import TypewriterText from "./TypewriterText";
+import { HoverBorderGradient } from "@/components/HoverBorderGradient";
+import InteractiveTerminal from "@/components/InteractiveTerminal";
+import TypewriterText from "@/components/TypewriterText";
 
 interface AboutProps {
   id?: string;

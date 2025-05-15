@@ -9,8 +9,8 @@ import {
 } from "react";
 import CommandPalette from "./CommandPalette";
 import CommandPaletteTrigger from "./CommandPaletteTrigger";
+import { useModal } from "./ModalProvider";
 
-// Create context for command palette
 interface CommandPaletteContextType {
   isOpen: boolean;
   open: () => void;
@@ -30,16 +30,15 @@ export const useCommandPalette = () => useContext(CommandPaletteContext);
 
 interface CommandPaletteProviderProps {
   children: React.ReactNode;
-  onScheduleCall?: () => void;
   onReplayIntro?: () => void;
 }
 
 export default function CommandPaletteProvider({
   children,
-  onScheduleCall,
   onReplayIntro,
 }: CommandPaletteProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { openBookingModal } = useModal();
 
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => setIsOpen(false), []);
@@ -63,11 +62,10 @@ export default function CommandPaletteProvider({
     <CommandPaletteContext.Provider value={{ isOpen, open, close, toggle }}>
       {children}
 
-      {/* Always render these components but control visibility via props */}
       <CommandPalette
         isOpen={isOpen}
         onClose={close}
-        onScheduleCall={onScheduleCall}
+        onScheduleCall={openBookingModal}
         onReplayIntro={onReplayIntro}
       />
       <CommandPaletteTrigger onClick={open} />

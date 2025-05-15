@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import { useSpotlightEffect } from "../hooks/useSpotlightEffect";
-import { useTerminalState } from "../hooks/useTerminalState";
-import { useCommandPalette } from "./CommandPaletteProvider";
-import HeadlineColumn from "./HeadlineColumn";
-import HeroBackground from "./HeroBackground";
-import TerminalColumn from "./TerminalColumn";
+import { useSpotlightEffect } from "@/hooks/useSpotlightEffect";
+import { useTerminalState } from "@/hooks/useTerminalState";
+import { useCommandPalette } from "@/components/CommandPaletteProvider";
+import HeadlineColumn from "@/components/HeadlineColumn";
+import HeroBackground from "@/components/HeroBackground";
+import TerminalColumn from "@/components/TerminalColumn";
 
 interface HeroProps {
   onBookCallClick: () => void;

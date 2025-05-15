@@ -1,11 +1,11 @@
 import { TerminalOption } from "@/types/terminal";
 import { motion } from "framer-motion";
 import { Waves } from "lucide-react";
-import CommandLine from "./CommandLine";
-import TerminalHeader from "./TerminalHeader";
-import TerminalOptionMenu from "./TerminalOptionMenu";
-import TerminalSequence, { Step } from "./TerminalSequence";
-import TerminalWindow from "./TerminalWindow";
+import CommandLine from "@/components/CommandLine";
+import TerminalHeader from "@/components/TerminalHeader";
+import TerminalOptionMenu from "@/components/TerminalOptionMenu";
+import TerminalSequence, { Step } from "@/components/TerminalSequence";
+import TerminalWindow from "@/components/TerminalWindow";
 
 interface TerminalColumnProps {
   activeStep: number;

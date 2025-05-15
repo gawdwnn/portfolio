@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useState } from "react";
-import BookingWidget from "./BookingWidget";
+import BookingWidget from "@/components/BookingWidget";
 
 // Modal context type
 interface ModalContextType {
@@ -20,15 +20,13 @@ export const useModal = () => useContext(ModalContext);
 
 interface ModalProviderProps {
   children: React.ReactNode;
-  calUsername?: string;
-  calEventSlug?: string;
 }
 
-export default function ModalProvider({
-  children,
-  calUsername = "YOUR_CAL_USERNAME",
-  calEventSlug = "YOUR_EVENT_SLUG",
-}: ModalProviderProps) {
+export default function ModalProvider({ children }: ModalProviderProps) {
+  console.log({
+    calUsername: process.env.NEXT_PUBLIC_CAL_USERNAME,
+    calEventSlug: process.env.NEXT_PUBLIC_CAL_EVENT_SLUG,
+  });
   // State for booking widget modal
   const [showBooking, setShowBooking] = useState(false);
 
@@ -49,8 +47,8 @@ export default function ModalProvider({
       {showBooking && (
         <BookingWidget
           onClose={closeBookingModal}
-          username={calUsername}
-          eventSlug={calEventSlug}
+          username={process.env.NEXT_PUBLIC_CAL_USERNAME!}
+          eventSlug={process.env.NEXT_PUBLIC_CAL_EVENT_SLUG!}
         />
       )}
     </ModalContext.Provider>
