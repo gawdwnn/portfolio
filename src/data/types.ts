@@ -15,8 +15,11 @@ export interface PersonalInfo {
   title: string;
   location: string;
   email: string;
-  github: string;
+  githubUrl: string;
+  linkedinUrl: string;
+  xUrl: string;
   bio: string;
+  resumeUrl: string;
 }
 
 export interface TerminalCommand {
@@ -46,4 +49,15 @@ export interface FeaturedProject {
   imageUrl: string;
   tags: string[];
   demoUrl: string;
+}
+
+export interface HeadlineData {
+  words: string[];
+  description: string;
+  stats: {
+    years: number;
+    projects: number;
+    clients: number;
+    aiSolutions: number;
+  };
 }

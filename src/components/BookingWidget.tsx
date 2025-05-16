@@ -36,10 +36,18 @@ export default function BookingWidget({
   }, [onClose]);
 
   return (
-    <Sheet open={true} onOpenChange={onClose}>
+    <Sheet
+      open={true}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
       <SheetContent
         side="right"
-        className="w-full sm:w-[800px] p-0 border-l bg-background"
+        className="w-full sm:max-w-[95%] md:max-w-[80%] lg:max-w-[1200px] p-0 border-l bg-background"
+        onPointerDownOutside={(e) => {
+          e.preventDefault();
+        }}
       >
         <SheetHeader className="p-4 border-b">
           <SheetTitle className="text-xl font-semibold">

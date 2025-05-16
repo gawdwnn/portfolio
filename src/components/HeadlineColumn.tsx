@@ -1,9 +1,12 @@
+import AnimatedTextCycle from "@/components/AnimatedTextCycle";
+import { useCommandPalette } from "@/components/CommandPaletteProvider";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { headlineData, personalInfo } from "@/data";
 import { motion } from "framer-motion";
 import {
   BrainCircuit,
@@ -18,8 +21,6 @@ import {
   Mail,
   Users,
 } from "lucide-react";
-import AnimatedTextCycle from "@/components/AnimatedTextCycle";
-import { useCommandPalette } from "@/components/CommandPaletteProvider";
 
 interface HeadlineColumnProps {
   onBookCallClick: () => void;
@@ -27,16 +28,7 @@ interface HeadlineColumnProps {
 
 const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
   const { open: openCommandPalette } = useCommandPalette();
-
-  const words = [
-    "Product Engineer",
-    "Full-Stack Engineer",
-    "Frontend Engineer",
-    "Backend Engineer",
-    "AI Agent Specialist",
-    "Design System Expert",
-    "Generative AI",
-  ];
+  const { words, description, stats } = headlineData;
 
   return (
     <motion.div
@@ -95,8 +87,7 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
         </h1>
 
         <p className="text-white/60 text-lg mt-6 mb-6 max-w-lg">
-          Building intelligent digital experiences where design meets
-          functionality. Let's transform your ideas into reality.
+          {description}
         </p>
 
         <div className="grid grid-cols-2 gap-4 w-full max-w-md mt-4 mb-6">
@@ -110,7 +101,9 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
             transition={{ type: "spring", stiffness: 300, damping: 15 }}
           >
             <div className="flex items-center justify-between mb-1">
-              <div className="text-3xl font-bold text-white">5+</div>
+              <div className="text-3xl font-bold text-white">
+                {stats.years}+
+              </div>
               <Briefcase className="w-5 h-5 text-white/40 group-hover:text-cyan-400 transition-colors" />
             </div>
             <div className="text-white/60 text-sm">Years Experience</div>
@@ -126,7 +119,9 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
             transition={{ type: "spring", stiffness: 300, damping: 15 }}
           >
             <div className="flex items-center justify-between mb-1">
-              <div className="text-3xl font-bold text-white">50+</div>
+              <div className="text-3xl font-bold text-white">
+                {stats.projects}+
+              </div>
               <Code className="w-5 h-5 text-white/40 group-hover:text-violet-400 transition-colors" />
             </div>
             <div className="text-white/60 text-sm">Projects Completed</div>
@@ -142,7 +137,9 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
             transition={{ type: "spring", stiffness: 300, damping: 15 }}
           >
             <div className="flex items-center justify-between mb-1">
-              <div className="text-3xl font-bold text-white">20+</div>
+              <div className="text-3xl font-bold text-white">
+                {stats.clients}+
+              </div>
               <Users className="w-5 h-5 text-white/40 group-hover:text-indigo-400 transition-colors" />
             </div>
             <div className="text-white/60 text-sm">Happy Clients</div>
@@ -158,7 +155,9 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
             transition={{ type: "spring", stiffness: 300, damping: 15 }}
           >
             <div className="flex items-center justify-between mb-1">
-              <div className="text-3xl font-bold text-white">10+</div>
+              <div className="text-3xl font-bold text-white">
+                {stats.aiSolutions}+
+              </div>
               <BrainCircuit className="w-5 h-5 text-white/40 group-hover:text-emerald-400 transition-colors" />
             </div>
             <div className="text-white/60 text-sm">AI Solutions</div>
@@ -177,15 +176,15 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
             >
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <a
-                    href="https://github.com/gawdwnn/"
+                  <motion.a
+                    href={personalInfo.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white/60 hover:text-white transition-colors"
                     aria-label="GitHub"
                   >
                     <Github className="w-5 h-5" />
-                  </a>
+                  </motion.a>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>View GitHub Profile</p>
@@ -195,7 +194,7 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a
-                    href="https://www.linkedin.com/in/gawdwnn/"
+                    href={personalInfo.linkedinUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white/60 hover:text-white transition-colors"
@@ -212,7 +211,7 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a
-                    href="mailto:gawdwnn@gmail.com"
+                    href={`mailto:${personalInfo.email}`}
                     className="text-white/60 hover:text-white transition-colors"
                     aria-label="Email"
                   >
@@ -227,7 +226,7 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a
-                    href="https://docs.google.com/document/d/e/2PACX-1vTSZD4HTB4DCnJjt-xK7f6ocd8nVNcoh7MxJ7BGo214MzNxWXIPY3RFaEe-LAwtfmEcIuRBluYvMClq/pub"
+                    href={personalInfo.resumeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white/60 hover:text-white transition-colors"

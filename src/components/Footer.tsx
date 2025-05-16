@@ -1,5 +1,6 @@
 "use client";
 
+import { personalInfo } from "@/data";
 import { motion } from "framer-motion";
 import { Download, Github, Linkedin, Mail, X } from "lucide-react";
 
@@ -8,29 +9,29 @@ export default function Footer() {
 
   const socialLinks = [
     {
-      href: "https://github.com/gawdwnn/",
+      href: personalInfo.githubUrl,
       label: "GitHub",
       icon: Github,
     },
     {
-      href: "https://www.linkedin.com/in/gawdwnn/",
+      href: personalInfo.linkedinUrl,
       label: "LinkedIn",
       icon: Linkedin,
     },
     {
-      href: "https://x.com/",
+      href: personalInfo.xUrl,
       label: "X (formerly Twitter)",
       icon: X,
     },
     {
-      href: "mailto:gawdwnn@gmail.com",
+      href: `mailto:${personalInfo.email}`,
       label: "Email",
       icon: Mail,
     },
   ];
 
   const resumeLink = {
-    href: "https://docs.google.com/document/d/e/2PACX-1vTSZD4HTB4DCnJjt-xK7f6ocd8nVNcoh7MxJ7BGo214MzNxWXIPY3RFaEe-LAwtfmEcIuRBluYvMClq/pub",
+    href: personalInfo.resumeUrl,
     label: "Download Resume",
     icon: Download,
   };
@@ -48,10 +49,8 @@ export default function Footer() {
               key={link.label}
               href={link.href}
               aria-label={link.label}
-              target={link.href.startsWith("http") ? "_blank" : undefined}
-              rel={
-                link.href.startsWith("http") ? "noopener noreferrer" : undefined
-              }
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-neutral-500 hover:text-white transition-colors"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
