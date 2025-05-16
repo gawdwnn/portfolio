@@ -32,7 +32,7 @@ export default function About({ id }: AboutProps) {
       "• 5 years of Software Engineering\n• Led feature development in agile teams\n• Built scalable solutions for B2B and B2C startups",
     education:
       "• Software Development, Conestoga College, Waterloo\n• Continuing education in AI and Machine Learning",
-    contact: `Email: ${personalInfo.email}\nGitHub: ${personalInfo.github}`,
+    contact: `Email: ${personalInfo.email}\nGitHub: ${personalInfo.githubUrl}`,
     clear: "CLEAR_COMMAND",
   };
 
@@ -191,7 +191,7 @@ export default function About({ id }: AboutProps) {
 
               <HoverBorderGradient
                 as="a"
-                href={`https://${personalInfo.github}`}
+                href={personalInfo.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 containerClassName="rounded-full"
