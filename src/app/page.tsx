@@ -68,7 +68,6 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col text-foreground overflow-x-hidden antialiased relative">
-
       <ParticleBackground />
 
       <motion.div

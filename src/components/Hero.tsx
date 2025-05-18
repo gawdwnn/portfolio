@@ -5,7 +5,6 @@ import HeadlineColumn from "@/components/HeadlineColumn";
 import HeroBackground from "@/components/HeroBackground";
 import TerminalColumn from "@/components/TerminalColumn";
 import { terminalCommands } from "@/data";
-import { useSpotlightEffect } from "@/hooks/useSpotlightEffect";
 import { useTerminalState } from "@/hooks/useTerminalState";
 import { useEffect, useMemo } from "react";
 
@@ -15,7 +14,6 @@ interface HeroProps {
 }
 
 export default function Hero({ onBookCallClick, id }: HeroProps) {
-  const mousePosition = useSpotlightEffect();
   const { open: openCommandPalette } = useCommandPalette();
 
   // Memoize steps array so it doesn't change on every render
@@ -51,15 +49,7 @@ export default function Hero({ onBookCallClick, id }: HeroProps) {
   }, [handleReplay]);
 
   return (
-    <section
-      id={id}
-      className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-black via-neutral-950 to-neutral-900"
-      // Apply spotlight effect using the hook
-      style={{
-        background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(29, 78, 216, 0.15), transparent 80%)`,
-      }}
-    >
-      {/* Render the background component */}
+    <section id={id} className="relative min-h-screen w-full">
       <HeroBackground />
 
       <div className="container relative z-10 mx-auto px-4 py-12 sm:py-20 min-h-screen flex flex-col justify-center">
