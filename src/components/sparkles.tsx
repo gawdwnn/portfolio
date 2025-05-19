@@ -1,8 +1,23 @@
 "use client";
 
+import type { MoveDirection } from "@tsparticles/engine";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
-import { useEffect, useId, useState } from "react";
+import { HTMLAttributes, useEffect, useId, useState } from "react";
+
+interface SparklesProps extends HTMLAttributes<HTMLDivElement> {
+  size?: number;
+  minSize?: number | null;
+  density?: number;
+  speed?: number;
+  minSpeed?: number | null;
+  opacity?: number;
+  opacitySpeed?: number;
+  minOpacity?: number | null;
+  color?: string;
+  background?: string;
+  options?: Record<string, any>;
+}
 
 export function Sparkles({
   className,
@@ -17,7 +32,7 @@ export function Sparkles({
   color = "#FFFFFF",
   background = "transparent",
   options = {},
-}) {
+}: SparklesProps) {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -47,7 +62,7 @@ export function Sparkles({
       },
       move: {
         enable: true,
-        direction: "none",
+        direction: "none" as MoveDirection,
         speed: {
           min: minSpeed || speed / 10,
           max: speed,
