@@ -128,7 +128,7 @@ const TerminalOptionMenu: React.FC<TerminalOptionMenuProps> = ({
 
       {/* Shortcut hint */}
       <div className="mt-4 text-neutral-500 text-xs">
-        Tip: Press <span className="text-indigo-400">ctrl/⌘K</span> for command
+        Tip: Press <span className="text-indigo-400">ctrl/⌘ K</span> for command
         palette
       </div>
     </div>

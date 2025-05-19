@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Command } from "lucide-react";
+import { Menu } from "lucide-react";
 
 interface CommandPaletteTriggerProps {
   onClick: () => void;
@@ -17,8 +17,8 @@ const CommandPaletteTrigger = ({ onClick }: CommandPaletteTriggerProps) => {
         onClick={onClick}
         className="group flex items-center gap-2 text-xs text-white/60 hover:text-white px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
       >
-        <Command className="w-3.5 h-3.5" />
-        <span>ctrl/⌘K</span>
+        <span className="hidden md:inline">ctrl/⌘ K</span>
+        <Menu className="inline h-3.5 w-3.5 md:hidden" />
       </button>
     </motion.div>
   );

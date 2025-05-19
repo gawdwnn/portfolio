@@ -262,7 +262,7 @@ const CommandPalette = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-start justify-center pt-[20vh]"
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-start justify-center pt-[20vh] px-4 sm:px-0"
       onClick={onClose}
     >
       <motion.div

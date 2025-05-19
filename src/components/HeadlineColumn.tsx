@@ -274,7 +274,7 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Command Palette (ctrl/⌘K)</p>
+                  <p>Command Palette (ctrl/⌘ K)</p>
                 </TooltipContent>
               </Tooltip>
             </motion.div>
