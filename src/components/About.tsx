@@ -40,6 +40,11 @@ export default function About({ id }: AboutProps) {
     if (isIntersecting && !animationStarted) {
       setAnimationStarted(true);
       setTerminalStage(1);
+    } else if (!isIntersecting && animationStarted) {
+      // Reset animation when section goes out of view
+      setAnimationStarted(false);
+      setTerminalStage(0);
+      setShowPrompt(false);
     }
   }, [isIntersecting, animationStarted]);
 
@@ -48,11 +53,14 @@ export default function About({ id }: AboutProps) {
 
     if (terminalStage > 0 && terminalStage < 3) {
       const timer = setTimeout(() => {
-        setTerminalStage((prev) => prev + 1);
+        if (isIntersecting) {
+          // Only progress if still in view
+          setTerminalStage((prev) => prev + 1);
+        }
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [terminalStage, animationStarted]);
+  }, [terminalStage, animationStarted, isIntersecting]);
 
   useEffect(() => {
     if (terminalStage === 4) {
