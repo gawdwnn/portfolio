@@ -1,35 +1,3 @@
-/**
- * Projects Component implementation guidelines:
- *
- * This component should display a grid of project cards, with the ability to fetch and display
- * real GitHub repository data. The implementation includes:
- *
- * 1. GitHub API Integration
- *    - Uses GitHub REST API v3 to fetch repository data
- *    - Implements rate limiting and caching strategies
- *    - Handles authentication and error states
- *
- * 2. Repository Data Display
- *    - Stars, forks, and issues count
- *    - Primary language with color indicator
- *    - Last updated timestamp
- *    - Repository description
- *    - Topics/tags
- *    - Contributor information
- *
- * 3. Interactive Features
- *    - Star/Fork repository directly from card
- *    - View repository statistics
- *    - Access commit history
- *    - Language breakdown
- *
- * 4. Performance Optimizations
- *    - Server-side data fetching
- *    - Client-side caching with SWR/React Query
- *    - Incremental static regeneration
- *    - Optimized image loading
- */
-
 "use client";
 
 import { Badge } from "@/components/ui/badge";
@@ -83,10 +51,6 @@ export default function Projects({ id }: ProjectsProps) {
 
   const handleCardExpand = (index: number) => {
     setExpandedCard(index);
-  };
-
-  const handleCardCollapse = () => {
-    setExpandedCard(null);
   };
 
   return (
@@ -181,14 +145,14 @@ export default function Projects({ id }: ProjectsProps) {
         </div>
 
         {/* Project Carousel */}
-        <div className="relative">
+        <div className="relative w-screen -ml-[calc((100vw-100%)/2)]">
           <div
             ref={scrollContainerRef}
-            className="flex overflow-x-auto gap-6 py-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            className="flex overflow-x-auto gap-6 py-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pl-[max(calc((100vw-100%)/2+1rem),1rem)] pr-[max(calc((100vw-100%)/2+1rem),1rem)]"
             onScroll={checkScrollability}
           >
             <div className="absolute right-0 z-[1000] h-auto w-[5%] overflow-hidden bg-gradient-to-l" />
-            <div className="flex flex-row justify-start gap-4 pl-3 max-w-5xl mx-auto">
+            <div className="flex flex-row justify-start gap-4 max-w-5xl mx-auto">
               {projects.map((project, index) => (
                 <motion.div
                   key={index}
@@ -280,7 +244,7 @@ export default function Projects({ id }: ProjectsProps) {
           </div>
 
           {/* Navigation Arrows */}
-          <div className="flex justify-end mt-8 gap-4">
+          <div className="flex justify-end mt-8 mr-10 gap-4">
             <Button
               variant="outline"
               size="icon"
