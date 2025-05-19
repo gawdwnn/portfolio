@@ -1,5 +1,5 @@
 /**
- * New Projects Component implementation guidelines:
+ * Projects Component implementation guidelines:
  *
  * This component should display a grid of project cards, with the ability to fetch and display
  * real GitHub repository data. The implementation includes:
@@ -28,332 +28,360 @@
  *    - Client-side caching with SWR/React Query
  *    - Incremental static regeneration
  *    - Optimized image loading
- *
- * @todo Implement GitHub API integration
- * @todo Add repository data fetching
- * @todo Enhance UI with GitHub-specific elements
- * @todo Implement caching and performance optimizations
  */
 
+"use client";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { featuredProject, projects } from "@/data";
-import { cn } from "@/lib/utils";
-import { ReactNode } from "react";
+import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight, ExternalLink, Github } from "lucide-react";
+import { useRef, useState } from "react";
 
-const ProjectGrid = ({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) => {
-  return (
-    <div
-      className={cn(
-        "grid w-full grid-cols-1 md:grid-cols-6 gap-4 auto-rows-[200px] md:auto-rows-[280px]",
-        className
-      )}
-    >
-      {children}
-    </div>
-  );
-};
-
-/**
- * ProjectCard Component
- *
- * Displays a card for a project with GitHub repository integration.
- *
- * @param {Object} props
- * @param {string} props.title - Repository name
- * @param {string} props.description - Repository description
- * @param {string} [props.span] - Grid span classes
- * @param {string} [props.gradient] - Background gradient classes
- * @param {string} [props.imageUrl] - Repository preview image
- * @param {string[]} [props.tags] - Repository topics/tags
- * @param {string} props.demoUrl - Repository URL
- *
- * @todo Add GitHub repository data interface
- * @todo Implement repository data fetching
- * @todo Add GitHub-specific UI elements:
- *    - Language indicator with color
- *    - Star/Fork buttons
- *    - Repository stats
- *    - Last commit info
- *    - Branch status
- *    - PR count
- *
- * Example GitHub data structure:
- * {
- *   name: string;
- *   description: string;
- *   stargazers_count: number;
- *   forks_count: number;
- *   open_issues_count: number;
- *   language: string;
- *   updated_at: string;
- *   html_url: string;
- *   topics: string[];
- *   default_branch: string;
- *   owner: {
- *     login: string;
- *     avatar_url: string;
- *   };
- * }
- */
-const ProjectCard = ({
-  title,
-  description,
-  span = "md:col-span-2 md:row-span-1",
-  gradient = "from-blue-500/20 to-purple-500/20",
-  imageUrl,
-  tags,
-  demoUrl,
-}: {
-  title: string;
-  description: string;
-  span?: string;
-  gradient?: string;
-  imageUrl?: string;
-  tags?: string[];
-  demoUrl: string;
-}) => {
-  return (
-    <div
-      className={cn(
-        "group relative overflow-hidden rounded-xl transition-all col-span-1",
-        "bg-white p-6 dark:bg-gray-900/80 border border-gray-200 dark:border-gray-800",
-        "hover:shadow-xl hover:shadow-blue-500/10 dark:hover:shadow-blue-500/5",
-        "dark:[background:linear-gradient(rgba(255,255,255,0.03),rgba(255,255,255,0))]",
-        span
-      )}
-    >
-      {/* Background gradient */}
-      <div
-        className={cn(
-          "absolute inset-0 z-0 opacity-30 transition-opacity duration-300 group-hover:opacity-50",
-          `bg-gradient-to-br ${gradient}`
-        )}
-      />
-
-      {/* Background image */}
-      {imageUrl && (
-        <div className="absolute top-0 right-0 h-full w-1/3 overflow-hidden z-0 opacity-50 transition-all duration-300 group-hover:opacity-70">
-          <div
-            className="h-full w-full bg-cover bg-center transform-gpu transition-transform duration-500 group-hover:scale-110"
-            style={{ backgroundImage: `url(${imageUrl})` }}
-          />
-        </div>
-      )}
-
-      {/* Main content that shifts up */}
-      <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 transition-all duration-300 group-hover:-translate-y-8 relative">
-        {/* Icon or project logo */}
-        <div className="mb-4 w-12 h-12 rounded-full flex items-center justify-center bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300 transform-gpu transition-all duration-300 group-hover:scale-75 origin-left">
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-            />
-          </svg>
-        </div>
-
-        {/* Title and description */}
-        <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white mb-2">
-          {title}
-        </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
-          {description}
-        </p>
-
-        {/* Tags */}
-        {tags && tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-2">
-            {tags.map((tag) => (
-              <span
-                key={tag}
-                className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* CTA button that appears from bottom */}
-      <div
-        className={cn(
-          "pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
-        )}
-      >
-        <Button
-          variant="ghost"
-          asChild
-          size="sm"
-          className="pointer-events-auto bg-white dark:bg-gray-800 shadow-sm dark:shadow-gray-900/20"
-        >
-          <a href={demoUrl} className="flex items-center">
-            Explore Project
-            <svg
-              className="ml-2 h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-              />
-            </svg>
-          </a>
-        </Button>
-      </div>
-
-      {/* Hover overlay */}
-      <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-black/[.03] group-hover:dark:bg-neutral-800/10" />
-    </div>
-  );
-};
-
-// Featured project with more prominence
-const FeaturedProjectCard = ({
-  title,
-  description,
-  imageUrl,
-  tags,
-  demoUrl,
-}: {
-  title: string;
-  description: string;
-  imageUrl?: string;
-  tags?: string[];
-  demoUrl: string;
-}) => {
-  return (
-    <div
-      className={cn(
-        "group relative overflow-hidden rounded-xl col-span-1 md:col-span-6 md:row-span-1",
-        "bg-white p-8 dark:bg-gray-900/80 border border-gray-200 dark:border-gray-800",
-        "hover:shadow-xl hover:shadow-indigo-500/10 dark:hover:shadow-indigo-500/5",
-        "dark:[background:linear-gradient(rgba(255,255,255,0.05),rgba(255,255,255,0))]",
-        "h-full"
-      )}
-    >
-      {/* Background gradient */}
-      <div className="absolute inset-0 z-0 opacity-30 bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-pink-500/20 transition-opacity duration-300 group-hover:opacity-50" />
-
-      <div className="relative z-10 flex flex-col md:flex-row gap-8">
-        {/* Image with hover effect */}
-        {imageUrl && (
-          <div className="md:w-1/3 min-h-[180px] overflow-hidden rounded-lg">
-            <div
-              className="h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-              style={{ backgroundImage: `url(${imageUrl})` }}
-            />
-          </div>
-        )}
-
-        {/* Content that shifts slightly on hover */}
-        <div className="md:w-2/3 transform-gpu transition-transform duration-300 group-hover:-translate-y-2">
-          <div className="mb-1 text-sm font-medium text-indigo-500 dark:text-indigo-400 transform-gpu transition-all duration-300 group-hover:translate-x-1">
-            FEATURED PROJECT
-          </div>
-          <h3 className="mb-3 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            {title}
-          </h3>
-          <p className="mb-4 text-gray-600 dark:text-gray-300 max-w-xl">
-            {description}
-          </p>
-
-          {tags && tags.length > 0 && (
-            <div className="mb-6 flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* CTA button that fades in more on hover */}
-          <Button
-            variant="ghost"
-            className="group/btn relative overflow-hidden rounded-lg px-6 py-2.5 text-sm font-medium text-gray-800 dark:text-white border border-indigo-200 dark:border-indigo-800/30 transition-all duration-300 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/20"
-            asChild
-          >
-            <a href={demoUrl} className="flex items-center">
-              <span className="relative z-10">View Case Study</span>
-              <svg
-                className="ml-2 h-5 w-5 transform-gpu transition-transform duration-300 group-hover/btn:translate-x-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </svg>
-            </a>
-          </Button>
-        </div>
-      </div>
-
-      {/* Hover overlay */}
-      <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-black/[.02] group-hover:dark:bg-neutral-800/5" />
-    </div>
-  );
-};
-
-// Define props for Projects component
 interface ProjectsProps {
   id?: string;
 }
 
 export default function Projects({ id }: ProjectsProps) {
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [expandedCard, setExpandedCard] = useState<number | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const checkScrollability = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } =
+        scrollContainerRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth);
+    }
+  };
+
+  const handlePrevSlide = () => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const scrollAmount = container.clientWidth;
+      container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  const handleNextSlide = () => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const scrollAmount = container.clientWidth;
+      container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  const handleCardExpand = (index: number) => {
+    setExpandedCard(index);
+  };
+
+  const handleCardCollapse = () => {
+    setExpandedCard(null);
+  };
+
   return (
-    <section id={id} className="py-16 md:py-24">
+    <section id={id} className="py-16 md:py-24 bg-black text-white">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center mb-16">
-          <div className="inline-block rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 mb-4">
-            CASE STUDIES
-          </div>
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
+          <Badge
+            variant="outline"
+            className="bg-purple-900/30 text-purple-300 border-purple-800 mb-6 py-1.5 px-3 rounded-full"
+          >
+            <div className="w-2 h-2 bg-purple-400 rounded-full mr-2"></div>
+            Featured Projects
+          </Badge>
+
+          <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
             AI-Powered Solutions
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
+          <p className="text-lg text-gray-400">
             Transforming industries with intelligent algorithms and intuitive
             interfaces
           </p>
         </div>
 
-        <FeaturedProjectCard {...featuredProject} />
+        {/* Featured Project */}
+        <div className="mb-16">
+          <Card className="bg-zinc-900 border-zinc-800 rounded-xl overflow-hidden">
+            <div className="p-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="relative aspect-video rounded-lg overflow-hidden">
+                  <div
+                    className="absolute inset-0 bg-cover bg-center transform-gpu transition-transform duration-500 hover:scale-105"
+                    style={{
+                      backgroundImage: `url(${featuredProject.imageUrl})`,
+                    }}
+                  />
+                </div>
 
-        <div className="mt-8">
-          <ProjectGrid>
-            {projects.map((project, index) => (
-              <ProjectCard key={index} {...project} />
-            ))}
-          </ProjectGrid>
+                <div className="flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-2xl font-bold mb-4">
+                      {featuredProject.title}
+                    </h3>
+                    <p className="text-gray-400 mb-6">
+                      {featuredProject.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {featuredProject.tags.map((tag) => (
+                        <Badge
+                          key={tag}
+                          variant="secondary"
+                          className="bg-zinc-800 text-gray-300"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <Button
+                      variant="outline"
+                      className="bg-zinc-800 border-zinc-700 hover:bg-zinc-700"
+                      asChild
+                    >
+                      <a
+                        href={featuredProject.demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ExternalLink className="mr-2 h-4 w-4" />
+                        View Live
+                      </a>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="bg-zinc-800 border-zinc-700 hover:bg-zinc-700"
+                      asChild
+                    >
+                      <a
+                        href={featuredProject.demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Github className="mr-2 h-4 w-4" />
+                        View Code
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
         </div>
+
+        {/* Project Carousel */}
+        <div className="relative">
+          <div
+            ref={scrollContainerRef}
+            className="flex overflow-x-auto gap-6 py-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            onScroll={checkScrollability}
+          >
+            <div className="absolute right-0 z-[1000] h-auto w-[5%] overflow-hidden bg-gradient-to-l" />
+            <div className="flex flex-row justify-start gap-4 pl-3 max-w-5xl mx-auto">
+              {projects.map((project, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.5,
+                      delay: 0.2 * index,
+                      ease: "easeOut",
+                      once: true,
+                    },
+                  }}
+                  className="last:pr-[5%] md:last:pr-[33%]"
+                >
+                  <motion.button
+                    onClick={() => handleCardExpand(index)}
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="block"
+                  >
+                    <Card className="w-[400px] bg-zinc-900 border-zinc-800 rounded-xl overflow-hidden group">
+                      <div className="relative aspect-video">
+                        <div
+                          className="absolute inset-0 bg-cover bg-center transform-gpu transition-transform duration-500 group-hover:scale-105"
+                          style={{
+                            backgroundImage: `url(${project.imageUrl})`,
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      </div>
+                      <div className="p-6">
+                        <h3 className="text-xl font-bold mb-2">
+                          {project.title}
+                        </h3>
+                        <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                          {project.description}
+                        </p>
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {project.tags.map((tag) => (
+                            <Badge
+                              key={tag}
+                              variant="secondary"
+                              className="bg-zinc-800 text-gray-300 text-xs"
+                            >
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="bg-zinc-800 border-zinc-700 hover:bg-zinc-700"
+                            asChild
+                          >
+                            <a
+                              href={project.demoUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <ExternalLink className="mr-2 h-4 w-4" />
+                              Live
+                            </a>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="bg-zinc-800 border-zinc-700 hover:bg-zinc-700"
+                            asChild
+                          >
+                            <a
+                              href={project.demoUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <Github className="mr-2 h-4 w-4" />
+                              Code
+                            </a>
+                          </Button>
+                        </div>
+                      </div>
+                    </Card>
+                  </motion.button>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Navigation Arrows */}
+          <div className="flex justify-end mt-8 gap-4">
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full bg-zinc-800 border-zinc-700 hover:bg-zinc-700 w-12 h-12"
+              onClick={handlePrevSlide}
+              disabled={!canScrollLeft}
+            >
+              <ChevronLeft className="h-6 w-6" />
+              <span className="sr-only">Previous slide</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full bg-zinc-800 border-zinc-700 hover:bg-zinc-700 w-12 h-12"
+              onClick={handleNextSlide}
+              disabled={!canScrollRight}
+            >
+              <ChevronRight className="h-6 w-6" />
+              <span className="sr-only">Next slide</span>
+            </Button>
+          </div>
+        </div>
+
+        {/* Expanded Card Sheet */}
+        <Sheet
+          open={expandedCard !== null}
+          onOpenChange={() => setExpandedCard(null)}
+        >
+          <SheetContent
+            side="bottom"
+            className="h-[90vh] bg-zinc-900 border-zinc-800"
+          >
+            {expandedCard !== null && (
+              <div className="p-8">
+                <SheetHeader>
+                  <SheetTitle className="text-2xl font-bold text-white">
+                    {projects[expandedCard].title}
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                  <div className="relative aspect-video rounded-lg overflow-hidden">
+                    <div
+                      className="absolute inset-0 bg-cover bg-center"
+                      style={{
+                        backgroundImage: `url(${projects[expandedCard].imageUrl})`,
+                      }}
+                    />
+                  </div>
+                  <div className="flex flex-col justify-between">
+                    <div>
+                      <p className="text-gray-400 mb-6">
+                        {projects[expandedCard].description}
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {projects[expandedCard].tags.map((tag) => (
+                          <Badge
+                            key={tag}
+                            variant="secondary"
+                            className="bg-zinc-800 text-gray-300"
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex gap-4">
+                      <Button
+                        variant="outline"
+                        className="bg-zinc-800 border-zinc-700 hover:bg-zinc-700"
+                        asChild
+                      >
+                        <a
+                          href={projects[expandedCard].demoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <ExternalLink className="mr-2 h-4 w-4" />
+                          View Live
+                        </a>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="bg-zinc-800 border-zinc-700 hover:bg-zinc-700"
+                        asChild
+                      >
+                        <a
+                          href={projects[expandedCard].demoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Github className="mr-2 h-4 w-4" />
+                          View Code
+                        </a>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </SheetContent>
+        </Sheet>
       </div>
     </section>
   );
