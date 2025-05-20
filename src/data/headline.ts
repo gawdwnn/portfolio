@@ -6,9 +6,11 @@ export const headlineData: HeadlineData = {
     "Full-Stack Engineer",
     "Frontend Engineer",
     "Backend Engineer",
-    "AI Agent Specialist",
-    "Design System Expert",
+    "AI Agents",
+    "Design System",
     "Generative AI",
+    "API Design & Development",
+    "Cloud Architecture",
   ],
   description:
     "Building intelligent digital experiences where design meets functionality. Let's transform your ideas into reality.",

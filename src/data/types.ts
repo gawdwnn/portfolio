@@ -6,6 +6,15 @@ export interface Skill {
 export interface Experience {
   title: string;
   company: string;
+  companyUrl?: string;
+  period: string;
+  highlights: string[];
+  techStack?: string[];
+}
+
+export interface Education {
+  school: string;
+  degree: string;
   period: string;
   highlights: string[];
 }

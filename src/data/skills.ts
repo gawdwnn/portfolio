@@ -1,64 +1,83 @@
-import { Skill } from "./types";
+import { Education, Skill } from "./types";
 
 export const techSkills: Skill[] = [
   {
+    name: "Programming Languages",
+    items: ["TypeScript", "Python", "Golang"],
+  },
+  {
     name: "Frontend",
-    items: ["React", "Next.js", "TypeScript", "TailwindCSS"],
+    items: [
+      "HTML",
+      "CSS",
+      "React",
+      "React Native",
+      "Flutter & Dart",
+      "Next.js",
+      "TypeScript",
+      "TailwindCSS",
+      "UI Libraries",
+      "Animation Libraries",
+    ],
   },
   {
     name: "Backend",
     items: [
+      "Python",
+      "Golang",
+      "Flask",
+      "Fast API",
       "Node.js",
       "Express.js",
       "NestJS",
-      "Flask",
-      "Fast API",
-      "GraphQL",
-      "REST APIs",
+      "GraphQL & REST APIs",
+      "Redis",
     ],
   },
   {
     name: "Database",
     items: [
-      "SQL Databases",
-      "NoSQL Databases",
-      "Supabase",
+      "PostgreSQL",
+      "MySQL",
+      "MongoDB",
       "Redis",
-      "Prisma ORM",
+      "Supabase",
+      "Firebase",
     ],
   },
   {
     name: "DevOps",
     items: [
+      "Git",
+      "CI/CD",
+      "Dev Containers",
       "Docker",
       "Kubernetes",
       "AWS",
       "Vercel",
-      "CircleCI",
-      "GitHub Actions",
     ],
   },
   {
     name: "Testing",
     items: ["Unit Testing", "Automated Testing", "TDD", "E2E Testing"],
   },
+  {
+    name: "AI & ML",
+    items: ["LLMs", "LLM APIs", "RAG", "Prompt Engineering", "AI Agents"],
+  },
 ];
 
-export const aiSkills: Skill[] = [
+export const education: Education[] = [
   {
-    name: "LLM Integration",
-    items: ["OpenAI API", "LangChain", "Vector Databases", "Embeddings"],
+    school: "Conestoga College Waterloo",
+    degree: "Software Development in View",
+    period: "Aug 2025",
+    highlights: [""],
   },
   {
-    name: "ML Frameworks",
-    items: ["TensorFlow", "PyTorch", "Hugging Face", "scikit-learn"],
-  },
-  {
-    name: "Data Processing",
-    items: ["Python", "NumPy", "Pandas", "Jupyter"],
-  },
-  {
-    name: "Deployment",
-    items: ["MLOps", "Model Serving", "Inference Optimization", "Fine-tuning"],
+    school: "Anambra State University of Technology",
+    degree: "Bachelor of Engineering - BE, Chemical Engineering",
+    period: "2018",
+    highlights: [""],
   },
 ];

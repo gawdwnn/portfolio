@@ -66,7 +66,7 @@ export default function Projects({ id }: ProjectsProps) {
           </Badge>
 
           <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-            AI-Powered Solutions
+            Craft • Design • Code
           </h2>
           <p className="text-lg text-gray-400">
             Transforming industries with intelligent algorithms and intuitive
