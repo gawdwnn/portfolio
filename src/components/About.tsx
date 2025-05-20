@@ -17,12 +17,12 @@ export default function About({ id }: AboutProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const { isIntersecting, ref } = useIntersectionObserver({
     threshold: 0.25,
-    freezeOnceVisible: true,
+    freezeOnceVisible: false,
   });
 
+  const [hasStarted, setHasStarted] = useState(false);
   const [terminalStage, setTerminalStage] = useState(0);
   const [showPrompt, setShowPrompt] = useState(false);
-  const [animationStarted, setAnimationStarted] = useState(false);
 
   const availableCommands = {
     help: "Available commands: skills, experience, education, contact, clear",
@@ -37,30 +37,22 @@ export default function About({ id }: AboutProps) {
   };
 
   useEffect(() => {
-    if (isIntersecting && !animationStarted) {
-      setAnimationStarted(true);
+    if (isIntersecting && !hasStarted) {
+      setHasStarted(true);
       setTerminalStage(1);
-    } else if (!isIntersecting && animationStarted) {
-      // Reset animation when section goes out of view
-      setAnimationStarted(false);
-      setTerminalStage(0);
-      setShowPrompt(false);
     }
-  }, [isIntersecting, animationStarted]);
+  }, [isIntersecting, hasStarted]);
 
   useEffect(() => {
-    if (!animationStarted) return;
+    if (!hasStarted) return;
 
     if (terminalStage > 0 && terminalStage < 3) {
       const timer = setTimeout(() => {
-        if (isIntersecting) {
-          // Only progress if still in view
-          setTerminalStage((prev) => prev + 1);
-        }
+        setTerminalStage((prev) => prev + 1);
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [terminalStage, animationStarted, isIntersecting]);
+  }, [terminalStage, hasStarted]);
 
   useEffect(() => {
     if (terminalStage === 4) {
@@ -74,7 +66,7 @@ export default function About({ id }: AboutProps) {
   const getInitialContent = () => {
     const content = [];
 
-    if (!animationStarted) {
+    if (!hasStarted) {
       content.push(
         <div key="placeholder" className="text-neutral-500">
           Terminal initializing...
