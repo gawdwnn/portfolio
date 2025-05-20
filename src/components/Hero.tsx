@@ -6,7 +6,7 @@ import HeroBackground from "@/components/HeroBackground";
 import TerminalColumn from "@/components/TerminalColumn";
 import { terminalCommands } from "@/data";
 import { useTerminalState } from "@/hooks/useTerminalState";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 interface HeroProps {
   onBookCallClick: () => void;
@@ -15,6 +15,7 @@ interface HeroProps {
 
 export default function Hero({ onBookCallClick, id }: HeroProps) {
   const { open: openCommandPalette } = useCommandPalette();
+  const terminalRef = useRef<HTMLDivElement>(null);
 
   // Memoize steps array so it doesn't change on every render
   const steps = useMemo(() => terminalCommands, []);
@@ -39,6 +40,11 @@ export default function Hero({ onBookCallClick, id }: HeroProps) {
   useEffect(() => {
     const handleReplayIntro = () => {
       handleReplay();
+      // Scroll to terminal with smooth behavior
+      terminalRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     };
 
     window.addEventListener("replay-intro", handleReplayIntro);
@@ -55,6 +61,7 @@ export default function Hero({ onBookCallClick, id }: HeroProps) {
       <div className="container relative z-10 mx-auto px-4 py-12 sm:py-20 min-h-screen flex flex-col justify-center">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           <TerminalColumn
+            ref={terminalRef}
             activeStep={activeStep}
             steps={steps}
             showMenu={showMenu}
