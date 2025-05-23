@@ -56,6 +56,43 @@
 
 :root {
   --radius: 0.625rem;
+
+  /* Fallback values using HSL for better browser compatibility */
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(222, 84%, 14.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(222, 84%, 14.1%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(222, 84%, 14.1%);
+  --primary: hsl(222, 47%, 11%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(210, 40%, 96%);
+  --secondary-foreground: hsl(222, 47%, 11%);
+  --muted: hsl(210, 40%, 96%);
+  --muted-foreground: hsl(215, 16%, 46.9%);
+  --accent: hsl(210, 40%, 96%);
+  --accent-foreground: hsl(222, 47%, 11%);
+  --destructive: hsl(0, 84%, 60%);
+  --border: hsl(214, 32%, 91%);
+  --input: hsl(214, 32%, 91%);
+  --ring: hsl(215, 20%, 65%);
+  --sidebar: hsl(210, 40%, 98%);
+  --sidebar-foreground: hsl(222, 84%, 14.1%);
+  --sidebar-primary: hsl(222, 47%, 11%);
+  --sidebar-primary-foreground: hsl(210, 40%, 98%);
+  --sidebar-accent: hsl(210, 40%, 96%);
+  --sidebar-accent-foreground: hsl(222, 47%, 11%);
+  --sidebar-border: hsl(214, 32%, 91%);
+  --sidebar-ring: hsl(215, 20%, 65%);
+
+  /* Brand Color Palette - Light Theme Fallbacks */
+  --brand-primary: #7c3aed;
+  --brand-secondary: #06b6d4;
+  --brand-accent: #e11d48;
+  --brand-accent-2: #a78bfa;
+  --brand-muted: #9ca3af;
+
+  /* OKLCH values for modern browsers */
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
@@ -82,16 +119,45 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
-
-  /* Brand Color Palette - Light Theme */
-  --brand-primary: #7c3aed; /* Indigo/Violet - Main Brand Color */
-  --brand-secondary: #06b6d4; /* Cyan - Secondary Brand Color */
-  --brand-accent: #e11d48; /* Rose - Accent Color */
-  --brand-accent-2: #a78bfa; /* Violet - Secondary Accent */
-  --brand-muted: #9ca3af; /* Gray - Muted Text Color */
 }
 
 .dark {
+  /* Fallback values using HSL for better browser compatibility */
+  --background: hsl(222, 84%, 14.1%);
+  --foreground: hsl(210, 40%, 98%);
+  --card: hsl(222, 47%, 11%);
+  --card-foreground: hsl(210, 40%, 98%);
+  --popover: hsl(222, 47%, 11%);
+  --popover-foreground: hsl(210, 40%, 98%);
+  --primary: hsl(214, 32%, 91%);
+  --primary-foreground: hsl(222, 47%, 11%);
+  --secondary: hsl(217, 32%, 17%);
+  --secondary-foreground: hsl(210, 40%, 98%);
+  --muted: hsl(217, 32%, 17%);
+  --muted-foreground: hsl(215, 20%, 65%);
+  --accent: hsl(217, 32%, 17%);
+  --accent-foreground: hsl(210, 40%, 98%);
+  --destructive: hsl(0, 63%, 70%);
+  --border: hsla(0, 0%, 100%, 0.1);
+  --input: hsla(0, 0%, 100%, 0.15);
+  --ring: hsl(215, 16%, 46.9%);
+  --sidebar: hsl(222, 47%, 11%);
+  --sidebar-foreground: hsl(210, 40%, 98%);
+  --sidebar-primary: hsl(217, 91%, 60%);
+  --sidebar-primary-foreground: hsl(210, 40%, 98%);
+  --sidebar-accent: hsl(217, 32%, 17%);
+  --sidebar-accent-foreground: hsl(210, 40%, 98%);
+  --sidebar-border: hsla(0, 0%, 100%, 0.1);
+  --sidebar-ring: hsl(215, 16%, 46.9%);
+
+  /* Brand Color Palette - Dark Theme Fallbacks */
+  --brand-primary: #8b5cf6;
+  --brand-secondary: #22d3ee;
+  --brand-accent: #fb7185;
+  --brand-accent-2: #c4b5fd;
+  --brand-muted: #d1d5db;
+
+  /* OKLCH values for modern browsers */
   --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
@@ -118,13 +184,6 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
-
-  /* Brand Color Palette - Dark Theme */
-  --brand-primary: #8b5cf6; /* Brighter Indigo/Violet for dark mode */
-  --brand-secondary: #22d3ee; /* Brighter Cyan for dark mode */
-  --brand-accent: #fb7185; /* Brighter Rose for dark mode */
-  --brand-accent-2: #c4b5fd; /* Brighter Violet for dark mode */
-  --brand-muted: #d1d5db; /* Lighter Gray for dark mode */
 }
 
 @layer base {
@@ -144,4 +203,41 @@
   --terminal-indigo: #6366f1;
   --terminal-cyan: #06b6d4;
   --terminal-border: #1e293b;
+}
+
+/* Progressive Enhancement for Modern Color Support */
+@supports (color: oklch(0.5 0.2 0)) {
+  :root {
+    /* Enhanced colors for browsers that support OKLCH */
+    --brand-primary: oklch(0.55 0.22 270);
+    --brand-secondary: oklch(0.7 0.15 195);
+    --brand-accent: oklch(0.6 0.25 0);
+    --brand-accent-2: oklch(0.75 0.2 290);
+  }
+
+  .dark {
+    --brand-primary: oklch(0.65 0.25 270);
+    --brand-secondary: oklch(0.8 0.18 195);
+    --brand-accent: oklch(0.7 0.22 0);
+    --brand-accent-2: oklch(0.8 0.15 290);
+  }
+}
+
+/* Feature Detection for Legacy Browser Support */
+@supports not (color: oklch(0.5 0.2 0)) {
+  /* Ensure gradients work in older browsers */
+  .bg-hero-gradient {
+    background: linear-gradient(135deg, #a5b4fc, #c084fc);
+  }
+
+  /* Enhance contrast for accessibility in older browsers */
+  :root {
+    --ring: hsl(215, 20%, 45%);
+    --border: hsl(214, 32%, 85%);
+  }
+
+  .dark {
+    --ring: hsl(215, 16%, 56.9%);
+    --border: hsla(0, 0%, 100%, 0.2);
+  }
 }
