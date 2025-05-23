@@ -1,22 +1,21 @@
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from "next/font/google";
+import Providers from "@/components/Providers";
+import { Toaster } from "@/components/ui/sonner";
+import type { Metadata } from "next";
+import { Playfair_Display } from "next/font/google";
 import "./globals.css";
-import Providers from '@/components/Providers';
-import { Toaster } from '@/components/ui/sonner';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const playfairDisplay = Playfair_Display({
+  weight: ["400", "700", "900"],
+  style: ["normal", "italic"],
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
+  fallback: ["Georgia", "serif"],
+  preload: true,
 });
 
 export const metadata: Metadata = {
-  title: 'Product Engineer',
-  description: 'Welcome to the portfolio of a product engineer',
+  title: "Product Engineer",
+  description: "Welcome to the portfolio of a product engineer",
 };
 
 export default function RootLayout({
@@ -26,9 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${playfairDisplay.className} antialiased`}>
         <Providers>{children}</Providers>
         <Toaster />
       </body>
