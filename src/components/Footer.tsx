@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { personalInfo } from "@/data";
 import { motion } from "framer-motion";
 import { Download, Github, Linkedin, Mail, X } from "lucide-react";
@@ -13,21 +19,25 @@ export default function Footer() {
       href: personalInfo.githubUrl,
       label: "GitHub",
       icon: Github,
+      tooltip: "View GitHub Profile",
     },
     {
       href: personalInfo.linkedinUrl,
       label: "LinkedIn",
       icon: Linkedin,
+      tooltip: "Connect/Chat on LinkedIn",
     },
     {
       href: personalInfo.xUrl,
       label: "X (formerly Twitter)",
       icon: X,
+      tooltip: "Follow on X",
     },
     {
       href: `mailto:${personalInfo.email}`,
       label: "Email",
       icon: Mail,
+      tooltip: "Send an Email",
     },
   ];
 
@@ -35,6 +45,7 @@ export default function Footer() {
     href: personalInfo.resumeUrl,
     label: "Download Resume",
     icon: Download,
+    tooltip: "View Resume",
   };
 
   return (
@@ -47,37 +58,54 @@ export default function Footer() {
             © {currentYear} Godwin O. All rights reserved.
           </div>
 
-          <div className="flex items-center gap-4">
-            {socialLinks.map((link) => (
-              <motion.a
-                key={link.label}
-                href={link.href}
-                aria-label={link.label}
-                target={link.href.startsWith("http") ? "_blank" : undefined}
-                rel={
-                  link.href.startsWith("http")
-                    ? "noopener noreferrer"
-                    : undefined
-                }
-                className="text-neutral-500 hover:text-white transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <link.icon className="w-5 h-5" />
-              </motion.a>
-            ))}
-            <motion.a
-              href={resumeLink.href}
-              aria-label={resumeLink.label}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-neutral-500 hover:text-white transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <resumeLink.icon className="w-5 h-5" />
-            </motion.a>
-          </div>
+          <TooltipProvider delayDuration={100}>
+            <div className="flex items-center gap-4">
+              {socialLinks.map((link) => (
+                <Tooltip key={link.label}>
+                  <TooltipTrigger asChild>
+                    <motion.a
+                      href={link.href}
+                      aria-label={link.label}
+                      target={
+                        link.href.startsWith("http") ? "_blank" : undefined
+                      }
+                      rel={
+                        link.href.startsWith("http")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      className="text-neutral-500 hover:text-white transition-colors"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <link.icon className="w-5 h-5" />
+                    </motion.a>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{link.tooltip}</p>
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <motion.a
+                    href={resumeLink.href}
+                    aria-label={resumeLink.label}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-neutral-500 hover:text-white transition-colors"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <resumeLink.icon className="w-5 h-5" />
+                  </motion.a>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{resumeLink.tooltip}</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </TooltipProvider>
         </div>
         <div className="text-[10px] text-neutral-600 text-center mt-6 pb-2">
           Built with Cursor AI

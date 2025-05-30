@@ -1,15 +1,13 @@
 import Providers from "@/components/Providers";
 import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
-import { Playfair_Display } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 
-const playfairDisplay = Playfair_Display({
-  weight: ["400", "700", "900"],
-  style: ["normal", "italic"],
+const montserrat = Montserrat({
   subsets: ["latin"],
   display: "swap",
-  fallback: ["Georgia", "serif"],
+  fallback: ["Arial", "sans-serif"],
   preload: true,
 });
 
@@ -25,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${playfairDisplay.className} antialiased`}>
+      <body className={`${montserrat.className} antialiased`}>
         <Providers>{children}</Providers>
         <Toaster />
       </body>
