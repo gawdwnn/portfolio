@@ -13,6 +13,7 @@ import {
   Search,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export interface CommandItem {
   id: string;
@@ -203,38 +204,53 @@ const CommandPalette = ({
     };
   }, [isOpen, getInitialSelectedIndex]);
 
-  // Memoize keyboard handler to prevent recreation on every render
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
+  // Keyboard navigation with react-hotkeys-hook
+  useHotkeys(
+    'up',
+    (e) => {
       if (!isOpen) return;
-
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        setSelectedCommandIndex((prev) =>
-          prev < filteredCommands.length - 1 ? prev + 1 : prev
-        );
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        setSelectedCommandIndex((prev) => (prev > 0 ? prev - 1 : 0));
-      } else if (e.key === "Enter") {
-        e.preventDefault();
-        if (filteredCommands[selectedCommandIndex]) {
-          filteredCommands[selectedCommandIndex].action();
-          onClose();
-        }
-      } else if (e.key === "Escape") {
-        e.preventDefault();
-        onClose();
-      }
+      e.preventDefault();
+      setSelectedCommandIndex((prev) => (prev > 0 ? prev - 1 : 0));
     },
+    { enableOnFormTags: true, preventDefault: true },
+    [isOpen, filteredCommands]
+  );
+
+  useHotkeys(
+    'down',
+    (e) => {
+      if (!isOpen) return;
+      e.preventDefault();
+      setSelectedCommandIndex((prev) =>
+        prev < filteredCommands.length - 1 ? prev + 1 : prev
+      );
+    },
+    { enableOnFormTags: true, preventDefault: true },
+    [isOpen, filteredCommands]
+  );
+
+  useHotkeys(
+    'enter',
+    (e) => {
+      if (!isOpen || !filteredCommands[selectedCommandIndex]) return;
+      e.preventDefault();
+      filteredCommands[selectedCommandIndex].action();
+      onClose();
+    },
+    { enableOnFormTags: true, preventDefault: true },
     [isOpen, filteredCommands, selectedCommandIndex, onClose]
   );
 
-  // Keyboard navigation handler
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
+  useHotkeys(
+    'esc',
+    (e) => {
+      if (!isOpen) return;
+      e.preventDefault();
+      onClose();
+    },
+    { enableOnFormTags: true, preventDefault: true },
+    [isOpen, onClose]
+  );
 
   const getCommandIcon = (command: CommandItem) => {
     switch (command.icon) {

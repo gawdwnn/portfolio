@@ -1,12 +1,7 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import CommandPalette from "./CommandPalette";
 import CommandPaletteTrigger from "./CommandPaletteTrigger";
 import { useModal } from "./ModalProvider";
@@ -44,19 +39,20 @@ export default function CommandPaletteProvider({
   const close = useCallback(() => setIsOpen(false), []);
   const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
 
-  // Global keyboard shortcut for command palette
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Command palette toggle with Cmd/Ctrl + K
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        toggle();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [toggle]);
+  // Global keyboard shortcut for command palette using react-hotkeys-hook
+  useHotkeys(
+    'ctrl+k, meta+k',
+    (e) => {
+      e.preventDefault();
+      toggle();
+    },
+    {
+      enableOnFormTags: true,
+      preventDefault: true,
+      enableOnContentEditable: true,
+    },
+    [toggle]
+  );
 
   return (
     <CommandPaletteContext.Provider value={{ isOpen, open, close, toggle }}>
