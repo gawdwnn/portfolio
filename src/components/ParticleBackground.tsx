@@ -7,25 +7,18 @@ import { loadSlim } from "tsparticles-slim";
 
 const ParticleBackground = () => {
   const particlesInit = useCallback(async (engine: Engine) => {
-    console.log("Initializing particles engine...");
-    // You can initialize the tsParticles instance (engine) here, adding custom shapes or presets
-    // This loads the tsparticles package bundle, it's the easiest method for getting everything ready
-    // Starting from v2 you can add only the features you need reducing the bundle size
     await loadSlim(engine);
-    console.log("Particles engine initialized.");
   }, []);
 
   const particlesLoaded = useCallback(
-    async (container: Container | undefined) => {
-      console.log("Particles container loaded:", container);
-    },
+    async (container: Container | undefined) => {},
     []
   );
 
   const options = {
     background: {
       color: {
-        value: "transparent", // Make background transparent
+        value: "transparent",
       },
     },
     fpsLimit: 60,
@@ -33,25 +26,25 @@ const ParticleBackground = () => {
       events: {
         onHover: {
           enable: true,
-          mode: "repulse", // Push particles away on hover
+          mode: "repulse",
         },
         resize: true,
       },
       modes: {
         repulse: {
-          distance: 80, // Distance particles are pushed
+          distance: 80,
           duration: 0.4,
         },
       },
     },
     particles: {
       color: {
-        value: "#4f46e5", // Indigo color matching theme
+        value: "#4f46e5",
       },
       links: {
-        color: "#ffffff", // White links
+        color: "#ffffff",
         distance: 150,
-        enable: false, // Disable links between particles
+        enable: false,
         opacity: 0.1,
         width: 1,
       },
@@ -61,31 +54,30 @@ const ParticleBackground = () => {
         outModes: {
           default: "out",
         },
-        random: true, // Random movement direction
-        speed: 0.5, // Slow particle speed
+        random: true,
+        speed: 0.5,
         straight: false,
       },
       number: {
         density: {
           enable: true,
-          area: 1000, // Adjust density based on area
+          area: 1000,
         },
-        value: 40, // Number of particles
+        value: 40,
       },
       opacity: {
-        value: 0.3, // Particle opacity
+        value: 0.3,
       },
       shape: {
-        type: "circle", // Particle shape
+        type: "circle",
       },
       size: {
-        value: { min: 1, max: 3 }, // Random particle size
+        value: { min: 1, max: 3 },
       },
     },
     detectRetina: true,
   };
 
-  // Type assertion needed for tsparticles options
   const typedOptions = options as any;
 
   return (
@@ -94,7 +86,7 @@ const ParticleBackground = () => {
       init={particlesInit}
       loaded={particlesLoaded}
       options={typedOptions}
-      className="absolute inset-0 z-0" // Position absolute behind content
+      className="absolute inset-0 z-0"
     />
   );
 };

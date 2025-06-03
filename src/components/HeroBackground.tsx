@@ -16,7 +16,7 @@ const HeroBackground = () => {
         initial={{ width: "0%", opacity: 0 }}
         whileInView={{ width: "100%", opacity: 0.15 }}
         transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
-        viewport={{ once: true, amount: 0.3 }} // Trigger once when 30% visible
+        viewport={{ once: true, amount: 0.3 }}
         className="absolute top-0 left-1/2 -translate-x-1/2 h-[300px] w-full -z-1"
         style={{
           background:

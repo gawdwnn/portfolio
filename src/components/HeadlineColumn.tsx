@@ -91,7 +91,6 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
         </p>
 
         <div className="grid grid-cols-2 gap-4 w-full max-w-md mt-4 mb-6">
-          {/* Stat Card 1: Years Experience */}
           <motion.div
             className="bg-white/5 border border-white/10 rounded-lg p-4 group"
             whileHover={{
@@ -109,7 +108,6 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
             <div className="text-white/60 text-sm">Years Experience</div>
           </motion.div>
 
-          {/* Stat Card 2: Projects Completed */}
           <motion.div
             className="bg-white/5 border border-white/10 rounded-lg p-4 group"
             whileHover={{
@@ -127,7 +125,6 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
             <div className="text-white/60 text-sm">Projects Completed</div>
           </motion.div>
 
-          {/* Stat Card 3: Happy Clients */}
           <motion.div
             className="bg-white/5 border border-white/10 rounded-lg p-4 group"
             whileHover={{
@@ -145,7 +142,6 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
             <div className="text-white/60 text-sm">Happy Clients</div>
           </motion.div>
 
-          {/* Stat Card 4: AI Solutions */}
           <motion.div
             className="bg-white/5 border border-white/10 rounded-lg p-4 group"
             whileHover={{
@@ -164,10 +160,8 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
           </motion.div>
         </div>
 
-        {/* Social links */}
         <TooltipProvider delayDuration={100}>
           <div className="flex items-center justify-between w-full max-w-md mt-4 mb-6">
-            {/* Social Media Links */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -241,7 +235,6 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
               </Tooltip>
             </motion.div>
 
-            {/* Action Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}

@@ -52,10 +52,8 @@ const TerminalColumn = forwardRef<HTMLDivElement, TerminalColumnProps>(
      * previously animated, ensuring informational content remains visible.
      */
     const renderCompletedSteps = () => {
-      // Only render in menu mode - animation mode handled by TerminalSequence
       if (!showMenu) return null;
 
-      // Render all steps as static CommandLine components
       return steps.map((step, index) => (
         <CommandLine key={index} command={step.command} output={step.output} />
       ));

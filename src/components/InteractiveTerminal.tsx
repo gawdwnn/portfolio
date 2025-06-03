@@ -19,7 +19,6 @@ interface InteractiveTerminalProps {
   onCommand?: (command: string) => void;
 }
 
-// User input and command response handling
 const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   title = "terminal",
   titleContent,

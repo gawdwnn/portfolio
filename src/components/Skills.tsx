@@ -83,20 +83,17 @@ export default function Skills({ id }: SkillsProps) {
                   transition={{ delay: index * 0.1 }}
                   className="relative"
                 >
-                  {/* Timeline connector */}
                   {index !== education.length - 1 && (
                     <div className="absolute left-6 top-16 bottom-0 w-px bg-gradient-to-b from-blue-500/50 to-purple-500/50" />
                   )}
 
                   <div className="flex gap-8">
-                    {/* Timeline dot */}
                     <div className="relative">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
                         <div className="w-8 h-8 rounded-full bg-neutral-950" />
                       </div>
                     </div>
 
-                    {/* Content */}
                     <div className="flex-1">
                       <div className="mb-2">
                         <span className="text-sm font-mono text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full">
@@ -142,20 +139,17 @@ export default function Skills({ id }: SkillsProps) {
                   transition={{ delay: index * 0.1 }}
                   className="relative"
                 >
-                  {/* Timeline connector */}
                   {index !== experiences.length - 1 && (
                     <div className="absolute left-6 top-16 bottom-0 w-px bg-gradient-to-b from-blue-500/50 to-purple-500/50" />
                   )}
 
                   <div className="flex gap-8">
-                    {/* Timeline dot */}
                     <div className="relative">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
                         <div className="w-8 h-8 rounded-full bg-neutral-950" />
                       </div>
                     </div>
 
-                    {/* Content */}
                     <div className="flex-1">
                       <div className="mb-2">
                         <span className="text-sm font-mono text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full">
@@ -194,7 +188,6 @@ export default function Skills({ id }: SkillsProps) {
                         )}
                       </div>
 
-                      {/* Highlights */}
                       <div className="bg-neutral-900/50 border border-neutral-800 rounded-lg p-4">
                         <ul className="space-y-2">
                           {exp.highlights.map((highlight, i) => (
@@ -208,7 +201,6 @@ export default function Skills({ id }: SkillsProps) {
                         </ul>
                       </div>
 
-                      {/* Tech Stack */}
                       {exp.techStack && exp.techStack.length > 0 && (
                         <div className="mt-4 flex flex-wrap gap-2">
                           {exp.techStack.map((tech) => (
@@ -236,12 +228,10 @@ export default function Skills({ id }: SkillsProps) {
       id={id}
       className="min-h-[80vh] py-16 md:py-24 relative overflow-hidden bg-neutral-950 text-white"
     >
-      {/* Tiles Background grid effect */}
       <div className="absolute inset-0 z-0 opacity-20">
         <Tiles />
       </div>
 
-      {/* Glow effects */}
       <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
       <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
 
@@ -254,7 +244,6 @@ export default function Skills({ id }: SkillsProps) {
           intelligence
         </p>
 
-        {/* Tab Navigation */}
         <div className="flex justify-center mb-12">
           <Tabs
             value={activeTab}
@@ -278,7 +267,6 @@ export default function Skills({ id }: SkillsProps) {
               ))}
             </TabsList>
 
-            {/* Tab Content */}
             <div className="min-h-[400px] mt-8 w-full">
               <AnimatePresence mode="wait">
                 <motion.div

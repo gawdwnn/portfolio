@@ -21,7 +21,6 @@ interface TerminalSequenceProps {
   children?: ReactNode;
 }
 
-// Sequential animation of commands
 const TerminalSequence: React.FC<TerminalSequenceProps> = ({
   steps,
   activeStep,
@@ -34,19 +33,14 @@ const TerminalSequence: React.FC<TerminalSequenceProps> = ({
   onSkip,
   children,
 }) => {
-  // Effect to handle auto-skip if we've finished all steps programmatically
   useEffect(() => {
-    // If active step is already at or beyond the end, we should call onStepComplete
     if (activeStep >= steps.length && onStepComplete) {
       onStepComplete();
     }
   }, [activeStep, steps.length, onStepComplete]);
 
-  // Handler for when command finishes typing
   const handleCommandComplete = (stepIndex: number) => {
-    // If this is the last output line of the current step, signal step completion
     if (onStepComplete) {
-      // Use a timeout to allow a pause between command and next step
       setTimeout(onStepComplete, 1000);
     }
   };
@@ -58,10 +52,8 @@ const TerminalSequence: React.FC<TerminalSequenceProps> = ({
       headerClassName={headerClassName}
       className={className}
     >
-      {/* Optional content before commands */}
       {children}
 
-      {/* Steps execution */}
       {steps.map((step, index) => (
         <div key={index} className={index > activeStep ? "hidden" : "block"}>
           {index === activeStep ? (
@@ -91,7 +83,6 @@ const TerminalSequence: React.FC<TerminalSequenceProps> = ({
         </div>
       ))}
 
-      {/* Add a manual "Skip" option for immediate access */}
       {showSkip && activeStep < steps.length && (
         <div className="mt-4 text-center">
           <button

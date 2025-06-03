@@ -19,7 +19,6 @@ const TypewriterText = ({
   const completedRef = useRef(false);
 
   useEffect(() => {
-    // Reset state when text changes
     setDisplayedText("");
     setCurrentIndex(0);
     completedRef.current = false;
@@ -34,10 +33,8 @@ const TypewriterText = ({
 
       return () => clearTimeout(timeout);
     } else if (onComplete && !completedRef.current) {
-      // Only trigger onComplete once per text animation
       completedRef.current = true;
 
-      // Call onComplete slightly after the last character is added
       const completeTimeout = setTimeout(() => {
         onComplete();
       }, speed);

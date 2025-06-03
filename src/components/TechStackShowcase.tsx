@@ -1,7 +1,7 @@
 "use client";
 
 import { InfiniteSlider } from "@/components/infinite-slider";
-import { ProgressiveBlur } from "@/components/progressive-blur";
+import { ProgressiveBlur } from "@/components/ProgressiveBlur";
 import { Sparkles } from "@/components/sparkles";
 import {
   SiAmazon,

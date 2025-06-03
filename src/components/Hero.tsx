@@ -17,7 +17,6 @@ export default function Hero({ onBookCallClick, id }: HeroProps) {
   const { open: openCommandPalette } = useCommandPalette();
   const terminalRef = useRef<HTMLDivElement>(null);
 
-  // Memoize steps array so it doesn't change on every render
   const steps = useMemo(() => terminalCommands, []);
 
   const {
@@ -36,11 +35,9 @@ export default function Hero({ onBookCallClick, id }: HeroProps) {
     onSelectCommandPalette: openCommandPalette,
   });
 
-  // Add listener for the replay-intro event
   useEffect(() => {
     const handleReplayIntro = () => {
       handleReplay();
-      // Scroll to terminal with smooth behavior
       terminalRef.current?.scrollIntoView({
         behavior: "smooth",
         block: "center",

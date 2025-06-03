@@ -19,7 +19,6 @@ export default function AnimatedTextCycle({
   const measureRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Update width when window resizes
   useEffect(() => {
     const handleResize = () => {
       updateWidth(currentIndex);
@@ -29,9 +28,7 @@ export default function AnimatedTextCycle({
     return () => window.removeEventListener("resize", handleResize);
   }, [currentIndex]);
 
-  // Get the width of the current word
   const updateWidth = (index: number) => {
-    // Skip width calculation if we're using parent container width constraints
     if (constrainWidth) {
       setWidth("100%");
       return;
@@ -40,13 +37,11 @@ export default function AnimatedTextCycle({
     if (measureRef.current) {
       const elements = measureRef.current.children;
       if (elements.length > index) {
-        // Get parent width to ensure we don't exceed it
         const parentWidth =
           containerRef.current?.parentElement?.getBoundingClientRect().width ||
           0;
         let measuredWidth = elements[index].getBoundingClientRect().width;
 
-        // Cap the width to parent container width
         if (parentWidth > 0 && measuredWidth > parentWidth) {
           measuredWidth = parentWidth;
         }
@@ -56,9 +51,7 @@ export default function AnimatedTextCycle({
     }
   };
 
-  // Use useLayoutEffect to calculate width before browser paint
   useLayoutEffect(() => {
-    // Wait a tiny bit for the DOM to fully settle
     const timer = setTimeout(() => {
       updateWidth(currentIndex);
     }, 50);
@@ -100,14 +93,12 @@ export default function AnimatedTextCycle({
     },
   };
 
-  // Determine styling for text items
   const textStyle = constrainWidth
     ? { whiteSpace: "normal", width: "100%" }
     : { whiteSpace: "nowrap" };
 
   return (
     <div ref={containerRef} style={{ width: "100%" }}>
-      {/* Hidden measurement div with all words rendered */}
       <div
         ref={measureRef}
         aria-hidden="true"
@@ -121,7 +112,6 @@ export default function AnimatedTextCycle({
         ))}
       </div>
 
-      {/* Visible animated word */}
       <motion.span
         className="relative inline-block"
         style={{ maxWidth: "100%", display: "block" }}
