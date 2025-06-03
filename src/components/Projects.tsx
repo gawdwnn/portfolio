@@ -10,44 +10,45 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { featuredProject, projects } from "@/data";
+import useEmblaCarousel from "embla-carousel-react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, ExternalLink, Github } from "lucide-react";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface ProjectsProps {
   id?: string;
 }
 
 export default function Projects({ id }: ProjectsProps) {
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    dragFree: true,
+  });
+  const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
+  const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const checkScrollability = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } =
-        scrollContainerRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth);
-    }
-  };
+  const scrollPrev = useCallback(
+    () => emblaApi && emblaApi.scrollPrev(),
+    [emblaApi]
+  );
+  const scrollNext = useCallback(
+    () => emblaApi && emblaApi.scrollNext(),
+    [emblaApi]
+  );
 
-  const handlePrevSlide = () => {
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      const scrollAmount = container.clientWidth;
-      container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-    }
-  };
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setPrevBtnDisabled(!emblaApi.canScrollPrev());
+    setNextBtnDisabled(!emblaApi.canScrollNext());
+  }, [emblaApi]);
 
-  const handleNextSlide = () => {
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      const scrollAmount = container.clientWidth;
-      container.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
-  };
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+  }, [emblaApi, onSelect]);
 
   const handleCardExpand = (index: number) => {
     setExpandedCard(index);
@@ -65,7 +66,7 @@ export default function Projects({ id }: ProjectsProps) {
             Featured Projects
           </Badge>
 
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
             Craft • Design • Code
           </h2>
           <p className="text-lg text-gray-400">
@@ -75,20 +76,25 @@ export default function Projects({ id }: ProjectsProps) {
         </div>
 
         {/* Featured Project */}
-        <div className="mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="mb-16"
+        >
           <Card className="bg-zinc-900 border-zinc-800 rounded-xl overflow-hidden">
             <div className="p-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="relative aspect-video rounded-lg overflow-hidden">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
+                <div className="md:col-span-3 relative aspect-video rounded-lg overflow-hidden">
                   <div
-                    className="absolute inset-0 bg-cover bg-center transform-gpu transition-transform duration-500 hover:scale-105"
+                    className="absolute inset-0 bg-cover bg-center bg-no-repeat w-full h-full transform-gpu transition-transform duration-500 hover:scale-105"
                     style={{
                       backgroundImage: `url(${featuredProject.imageUrl})`,
                     }}
                   />
                 </div>
 
-                <div className="flex flex-col justify-between">
+                <div className="md:col-span-2 flex flex-col justify-between">
                   <div>
                     <h3 className="text-2xl font-bold mb-4">
                       {featuredProject.title}
@@ -142,17 +148,12 @@ export default function Projects({ id }: ProjectsProps) {
               </div>
             </div>
           </Card>
-        </div>
+        </motion.div>
 
         {/* Project Carousel */}
         <div className="relative w-screen -ml-[calc((100vw-100%)/2)]">
-          <div
-            ref={scrollContainerRef}
-            className="flex overflow-x-auto gap-6 py-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pl-[max(calc((100vw-100%)/2+1rem),1rem)] pr-[max(calc((100vw-100%)/2+1rem),1rem)]"
-            onScroll={checkScrollability}
-          >
-            <div className="absolute right-0 z-[1000] h-auto w-[5%] overflow-hidden bg-gradient-to-l" />
-            <div className="flex flex-row justify-start gap-4 max-w-5xl mx-auto">
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex gap-6 py-4 pl-[max(calc((100vw-100%)/2+1rem),1rem)] pr-[max(calc((100vw-100%)/2+1rem),1rem)]">
               {projects.map((project, index) => (
                 <motion.div
                   key={index}
@@ -164,18 +165,17 @@ export default function Projects({ id }: ProjectsProps) {
                       duration: 0.5,
                       delay: 0.2 * index,
                       ease: "easeOut",
-                      once: true,
                     },
                   }}
-                  className="last:pr-[5%] md:last:pr-[33%]"
+                  className="flex-shrink-0 flex-grow-0 basis-[90%] sm:basis-[calc(50%-0.75rem)] lg:basis-[400px]"
                 >
                   <motion.button
                     onClick={() => handleCardExpand(index)}
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="block"
+                    className="block w-full h-full"
                   >
-                    <Card className="w-[400px] bg-zinc-900 border-zinc-800 rounded-xl overflow-hidden group">
+                    <Card className="w-full bg-zinc-900 border-zinc-800 rounded-xl overflow-hidden group h-full">
                       <div className="relative aspect-video">
                         <div
                           className="absolute inset-0 bg-cover bg-center transform-gpu transition-transform duration-500 group-hover:scale-105"
@@ -185,25 +185,25 @@ export default function Projects({ id }: ProjectsProps) {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </div>
-                      <div className="p-6">
-                        <h3 className="text-xl font-bold mb-2">
+                      <div className="p-6 text-left">
+                        <h3 className="text-xl font-bold mb-2 group-hover:text-purple-400 transition-colors duration-300">
                           {project.title}
                         </h3>
-                        <p className="text-gray-400 text-sm mb-4 line-clamp-2">
-                          {project.description}
-                        </p>
                         <div className="flex flex-wrap gap-2 mb-4">
                           {project.tags.map((tag) => (
                             <Badge
                               key={tag}
                               variant="secondary"
-                              className="bg-zinc-800 text-gray-300 text-xs"
+                              className="bg-zinc-800 text-gray-300 text-xs group-hover:bg-purple-900/50 group-hover:text-purple-300 transition-colors duration-300"
                             >
                               {tag}
                             </Badge>
                           ))}
                         </div>
-                        <div className="flex gap-2">
+                        <p className="text-gray-400 text-sm mb-4 line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-0 group-hover:h-auto overflow-hidden">
+                          {project.description}
+                        </p>
+                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           <Button
                             variant="outline"
                             size="sm"
@@ -249,8 +249,8 @@ export default function Projects({ id }: ProjectsProps) {
               variant="outline"
               size="icon"
               className="rounded-full bg-zinc-800 border-zinc-700 hover:bg-zinc-700 w-12 h-12"
-              onClick={handlePrevSlide}
-              disabled={!canScrollLeft}
+              onClick={scrollPrev}
+              disabled={prevBtnDisabled}
             >
               <ChevronLeft className="h-6 w-6" />
               <span className="sr-only">Previous slide</span>
@@ -259,8 +259,8 @@ export default function Projects({ id }: ProjectsProps) {
               variant="outline"
               size="icon"
               className="rounded-full bg-zinc-800 border-zinc-700 hover:bg-zinc-700 w-12 h-12"
-              onClick={handleNextSlide}
-              disabled={!canScrollRight}
+              onClick={scrollNext}
+              disabled={nextBtnDisabled}
             >
               <ChevronRight className="h-6 w-6" />
               <span className="sr-only">Next slide</span>
