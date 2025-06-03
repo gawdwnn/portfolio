@@ -106,11 +106,9 @@ const CommandPalette = ({
       category: "action",
       icon: "replay",
       action: () => {
-        // Navigate to hero section
         const heroSection = document.getElementById("hero-section");
         if (heroSection) {
           heroSection.scrollIntoView({ behavior: "smooth" });
-          // Trigger replay via callback or event
           if (onReplayIntro) {
             onReplayIntro();
           } else {
@@ -125,19 +123,18 @@ const CommandPalette = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCommandIndex, setSelectedCommandIndex] = useState(0);
   const commandInputRef = useRef<HTMLInputElement>(null);
+  const commandItemsRef = useRef<HTMLDivElement[]>([]);
+  const commandsContainerRef = useRef<HTMLDivElement>(null);
 
-  // Memoize the commands to prevent recreation on every render
   const commands = useMemo(
     () => createDefaultCommands(),
     [onScheduleCall, onReplayIntro]
   );
 
-  // Simplified filterCommands, logic moved to useEffect
   const filterCommands = useCallback((query: string) => {
     setSearchQuery(query);
   }, []);
 
-  // Memoize filtered commands to avoid recalculating on every render
   const filteredCommands = useMemo(() => {
     if (searchQuery) {
       return commands.filter((command) =>
@@ -147,7 +144,6 @@ const CommandPalette = ({
     return commands;
   }, [commands, searchQuery]);
 
-  // Memoized function to get selected index based on URL hash
   const getInitialSelectedIndex = useCallback(() => {
     if (!searchQuery) {
       const currentHash = window.location.hash;
@@ -176,41 +172,44 @@ const CommandPalette = ({
     return 0;
   }, [commands, searchQuery]);
 
-  // Effect for handling palette open/close and focus management
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
 
-      // Focus input when palette opens
       setTimeout(() => {
         commandInputRef.current?.focus();
       }, 100);
 
-      // Set selected index based on URL or search
       setSelectedCommandIndex(getInitialSelectedIndex());
     } else {
-      // Palette is closing, reset its state
-      setSearchQuery(""); // Clear search query
-      setSelectedCommandIndex(0); // Reset selected index
+      setSearchQuery("");
+      setSelectedCommandIndex(0);
       if (commandInputRef.current) {
-        commandInputRef.current.value = ""; // Clear input field
+        commandInputRef.current.value = "";
       }
-      document.body.style.overflow = ""; // Restore background scroll
+      document.body.style.overflow = "";
     }
 
-    // Cleanup function to ensure scroll is restored if component unmounts while open
     return () => {
       document.body.style.overflow = "";
     };
   }, [isOpen, getInitialSelectedIndex]);
 
-  // Keyboard navigation with react-hotkeys-hook
   useHotkeys(
     'up',
     (e) => {
       if (!isOpen) return;
       e.preventDefault();
-      setSelectedCommandIndex((prev) => (prev > 0 ? prev - 1 : 0));
+      setSelectedCommandIndex((prev) => {
+        const newIndex = prev > 0 ? prev - 1 : 0;
+        setTimeout(() => {
+          commandItemsRef.current[newIndex]?.scrollIntoView({
+            block: 'nearest',
+            behavior: 'smooth'
+          });
+        }, 0);
+        return newIndex;
+      });
     },
     { enableOnFormTags: true, preventDefault: true },
     [isOpen, filteredCommands]
@@ -221,9 +220,16 @@ const CommandPalette = ({
     (e) => {
       if (!isOpen) return;
       e.preventDefault();
-      setSelectedCommandIndex((prev) =>
-        prev < filteredCommands.length - 1 ? prev + 1 : prev
-      );
+      setSelectedCommandIndex((prev) => {
+        const newIndex = prev < filteredCommands.length - 1 ? prev + 1 : prev;
+        setTimeout(() => {
+          commandItemsRef.current[newIndex]?.scrollIntoView({
+            block: 'nearest',
+            behavior: 'smooth'
+          });
+        }, 0);
+        return newIndex;
+      });
     },
     { enableOnFormTags: true, preventDefault: true },
     [isOpen, filteredCommands]
@@ -305,7 +311,10 @@ const CommandPalette = ({
           </div>
         </div>
 
-        <div className="max-h-72 overflow-y-auto">
+        <div 
+          className="max-h-72 overflow-y-auto"
+          ref={commandsContainerRef}
+        >
           {filteredCommands.length === 0 ? (
             <div className="px-4 py-6 text-neutral-500 text-sm text-center">
               <div className="mb-2 opacity-50">
@@ -315,7 +324,6 @@ const CommandPalette = ({
               <div className="text-xs">Try a different search term</div>
             </div>
           ) : searchQuery ? (
-            // Search results view
             <div className="py-2">
               <div className="px-3 py-1 text-xs text-neutral-500 uppercase">
                 Search Results
@@ -323,6 +331,9 @@ const CommandPalette = ({
               {filteredCommands.map((command, index) => (
                 <div
                   key={command.id}
+                  ref={(el) => {
+                    if (el) commandItemsRef.current[index] = el;
+                  }}
                   className={cn(
                     "px-4 py-2 cursor-pointer flex items-center gap-3 mx-1 rounded",
                     index === selectedCommandIndex
@@ -333,7 +344,6 @@ const CommandPalette = ({
                     command.action();
                     onClose();
                   }}
-                  // Optional: Add mouse hover to update selected index
                   onMouseEnter={() => setSelectedCommandIndex(index)}
                 >
                   <div
@@ -351,7 +361,6 @@ const CommandPalette = ({
               ))}
             </div>
           ) : (
-            // Categorized commands view
             <>
               {["navigation", "action", "terminal"].map((category) => {
                 const categoryCommands = commands.filter(
@@ -369,13 +378,15 @@ const CommandPalette = ({
                         : "Terminal"}
                     </div>
                     {categoryCommands.map((command) => {
-                      // Find the index in the *currently filtered* list (which is all commands when search is empty)
                       const index = filteredCommands.findIndex(
                         (cmd) => cmd.id === command.id
                       );
                       return (
                         <div
                           key={command.id}
+                          ref={(el) => {
+                            if (el) commandItemsRef.current[index] = el;
+                          }}
                           className={cn(
                             "px-4 py-2 cursor-pointer flex items-center gap-3 mx-1 rounded",
                             index === selectedCommandIndex

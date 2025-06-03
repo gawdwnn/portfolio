@@ -20,7 +20,6 @@ const CommandPaletteContext = createContext<CommandPaletteContextType>({
   toggle: () => {},
 });
 
-// Custom hook to access command palette context
 export const useCommandPalette = () => useContext(CommandPaletteContext);
 
 interface CommandPaletteProviderProps {
@@ -39,7 +38,6 @@ export default function CommandPaletteProvider({
   const close = useCallback(() => setIsOpen(false), []);
   const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
 
-  // Global keyboard shortcut for command palette using react-hotkeys-hook
   useHotkeys(
     'ctrl+k, meta+k',
     (e) => {
