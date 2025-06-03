@@ -108,7 +108,7 @@ export default function Footer() {
           </TooltipProvider>
         </div>
         <div className="text-[10px] text-neutral-600 text-center mt-6 pb-2">
-          Built with Cursor AI
+          Built with vibes 🐾
         </div>
       </div>
     </footer>

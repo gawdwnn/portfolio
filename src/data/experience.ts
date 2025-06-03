@@ -16,6 +16,7 @@ export const experiences: Experience[] = [
       "React.js",
       "React Native",
       "Styled Components",
+      "Design System",
       "Ruby on Rails",
       "GraphQL",
       "PostgreSQL",

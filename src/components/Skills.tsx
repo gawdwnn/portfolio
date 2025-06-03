@@ -12,9 +12,9 @@ interface SkillsProps {
 }
 
 const tabs = [
-  { id: "skills", label: "Technical Skills" },
-  { id: "education", label: "Education" },
+  { id: "skills", label: "Toolbox" },
   { id: "resume", label: "Experience" },
+  { id: "education", label: "Education" },
 ] as const;
 
 export default function Skills({ id }: SkillsProps) {
@@ -261,7 +261,7 @@ export default function Skills({ id }: SkillsProps) {
             onValueChange={handleTabChange}
             className="w-full flex flex-col items-center"
           >
-            <TabsList className="bg-neutral-900 border border-neutral-800 rounded-lg p-1 inline-flex">
+            <TabsList className="bg-neutral-900 border border-neutral-800 rounded-lg p-1 flex w-full mx-2 sm:mx-0 overflow-x-auto lg:w-auto lg:mx-auto">
               {tabs.map((tab) => (
                 <TabsTrigger
                   key={tab.id}

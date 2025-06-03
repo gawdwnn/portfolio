@@ -20,7 +20,7 @@ const HeroBackground = () => {
         className="absolute top-0 left-1/2 -translate-x-1/2 h-[300px] w-full -z-1"
         style={{
           background:
-            "conic-gradient(from 90deg at 50% 0%, #06b6d4, #7c3aed, #06b6d4)",
+            "conic-gradient(from 90deg at 50% 0%, #22d3ee, #7c3aed, #22d3ee)",
           maskImage:
             "linear-gradient(to bottom, black 0%, black 50%, transparent 100%)",
         }}
@@ -33,7 +33,7 @@ const HeroBackground = () => {
         className="absolute top-0 left-1/2 -translate-x-1/2 h-[400px] w-full -z-1"
         style={{
           background:
-            "conic-gradient(from 270deg at 50% 0%, #a78bfa, #67e8f9, #a78bfa)",
+            "conic-gradient(from 270deg at 50% 0%, #a78bfa, #22d3ee, #a78bfa)",
           maskImage:
             "linear-gradient(to bottom, black 0%, black 40%, transparent 90%)",
         }}
@@ -78,7 +78,7 @@ const HeroBackground = () => {
               y2="0%"
             >
               <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.6" />
-              <stop offset="50%" stopColor="#06b6d4" stopOpacity="0.6" />
+              <stop offset="50%" stopColor="#22d3ee" stopOpacity="0.6" />
               <stop offset="100%" stopColor="#7c3aed" stopOpacity="0.6" />
             </linearGradient>
           </defs>
