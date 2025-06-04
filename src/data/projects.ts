@@ -3,7 +3,7 @@ import { FeaturedProject, Project } from "./types";
 export const projects: Project[] = [];
 
 export const featuredProject: FeaturedProject = {
-  title: "Studyloopai",
+  title: "StudyLoopAI",
   description: `
     StudyLoop is a web-based, AI-powered platform designed to empower college students to study smarter, not harder. By leveraging advanced adaptive tools and a learning gap algorithm, StudyLoop transforms uploaded course materials—PDFs, slides, notes, and more—into personalized smart summaries, adaptive quizzes, flashcards, and gamified learning experiences.
 
@@ -11,9 +11,32 @@ export const featuredProject: FeaturedProject = {
 
     With StudyLoop, college students gain a tailored, effective study solution to excel in their academic journey.
     `,
-  imageUrl: "/days-since.jpeg",
-  tags: ["TypeScript", "Next.js", "RAG", "LLMs", "AI Agents"],
+  tags: [
+    "TypeScript",
+    "Next.js",
+    "Tailwindcss",
+    "Shadcn/ui",
+    "Supabase",
+    "PG vector",
+    "RAG",
+    "LLMs",
+    "AI Agents",
+  ],
   demoUrl: "https://studyloopai.vercel.app/",
   githubUrl: "https://github.com/gawdwnn/studyloopai",
   projectStatus: "in-progress",
+  stats: [
+    {
+      label: "Users",
+      value: "++",
+    },
+    {
+      label: "Downloads",
+      value: "++",
+    },
+    {
+      label: "Active Users",
+      value: "++",
+    },
+  ],
 };

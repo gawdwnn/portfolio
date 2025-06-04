@@ -48,7 +48,7 @@ export interface Project {
   title: string;
   description: string;
   gradient: string;
-  imageUrl: string;
+  imageUrl?: string;
   tags: string[];
   demoUrl: string;
   githubUrl: string;
@@ -59,11 +59,15 @@ export interface Project {
 export interface FeaturedProject {
   title: string;
   description: string;
-  imageUrl: string;
+  imageUrl?: string;
   tags: string[];
   demoUrl: string;
   githubUrl: string;
   projectStatus: ProjectStatus;
+  stats?: {
+    label: string;
+    value: string;
+  }[];
 }
 
 export interface HeadlineData {
