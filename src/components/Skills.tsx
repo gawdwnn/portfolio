@@ -226,7 +226,7 @@ export default function Skills({ id }: SkillsProps) {
   return (
     <section
       id={id}
-      className="min-h-[80vh] py-16 md:py-24 relative overflow-hidden bg-neutral-950 text-white"
+      className="min-h-[80vh] py-16 md:py-24 relative overflow-hidden text-white"
     >
       <div className="absolute inset-0 z-0 opacity-20">
         <Tiles />
