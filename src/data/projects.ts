@@ -1,67 +1,19 @@
 import { FeaturedProject, Project } from "./types";
 
-export const projects: Project[] = [
-  {
-    title: "Intelligent Document Analyzer",
-    description:
-      "AI-powered platform that extracts insights from unstructured documents using advanced NLP and machine learning algorithms.",
-    gradient: "from-emerald-500/20 to-teal-500/20",
-    imageUrl: "/days-since.jpeg",
-    tags: ["NLP", "Machine Learning", "React"],
-    demoUrl: "#document-analyzer",
-  },
-  {
-    title: "Neural Synthesis Engine",
-    description:
-      "Real-time audio processing tool that uses neural networks to generate and transform sounds.",
-    gradient: "from-purple-500/20 to-pink-500/20",
-    imageUrl: "/days-since.jpeg",
-    tags: ["TensorFlow", "WebAudio", "GPT"],
-    demoUrl: "#neural-synthesis",
-  },
-  {
-    title: "Predictive Analytics Dashboard",
-    description:
-      "Interactive dashboard visualizing complex data patterns with predictive modeling capabilities.",
-    gradient: "from-blue-500/20 to-cyan-500/20",
-    imageUrl: "/days-since.jpeg",
-    tags: ["Data Visualization", "Python", "Next.js"],
-    demoUrl: "#analytics-dashboard",
-  },
-  {
-    title: "Conversational AI Framework",
-    description:
-      "A toolkit for building human-like conversational agents with context awareness and personality.",
-    span: "md:col-span-3 md:row-span-2",
-    gradient: "from-amber-500/20 to-orange-500/20",
-    imageUrl: "/days-since.jpeg",
-    tags: ["LLMs", "Chatbots", "TypeScript"],
-    demoUrl: "#conversational-ai",
-  },
-  {
-    title: "Vector Search Engine",
-    description:
-      "Semantic search implementation using vector embeddings to find conceptually similar content.",
-    span: "md:col-span-3 md:row-span-1",
-    gradient: "from-indigo-500/20 to-violet-500/20",
-    imageUrl: "/days-since.jpeg",
-    tags: ["Vector DB", "Embeddings", "Node.js"],
-    demoUrl: "#vector-search",
-  },
-];
+export const projects: Project[] = [];
 
 export const featuredProject: FeaturedProject = {
-  title: "Multimodal AI Platform",
-  description:
-    "A comprehensive platform that combines vision, language, and audio AI to create powerful cross-modal applications. Enables businesses to build solutions that understand and generate content across different formats seamlessly.",
+  title: "Studyloopai",
+  description: `
+    StudyLoop is a web-based, AI-powered platform designed to empower college students to study smarter, not harder. By leveraging advanced adaptive tools and a learning gap algorithm, StudyLoop transforms uploaded course materials—PDFs, slides, notes, and more—into personalized smart summaries, adaptive quizzes, flashcards, and gamified learning experiences.
+
+    Our closed-loop learning engine guides students through a seamless cycle: upload materials, understand content, practice with tailored tools, diagnose weaknesses, refine knowledge, and simulate exams—all in a privacy-first, engaging environment. Think of StudyLoop as the Duolingo of personalized studying: rewarding, accessible, and efficient.
+
+    With StudyLoop, college students gain a tailored, effective study solution to excel in their academic journey.
+    `,
   imageUrl: "/days-since.jpeg",
-  tags: [
-    "Computer Vision",
-    "NLP",
-    "Speech Recognition",
-    "Next.js",
-    "Python",
-    "TensorFlow",
-  ],
-  demoUrl: "#multimodal-ai",
+  tags: ["TypeScript", "Next.js", "RAG", "LLMs", "AI Agents"],
+  demoUrl: "https://studyloopai.vercel.app/",
+  githubUrl: "https://github.com/gawdwnn/studyloopai",
+  projectStatus: "in-progress",
 };

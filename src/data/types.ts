@@ -42,6 +42,8 @@ export interface SocialLink {
   icon: string;
 }
 
+export type ProjectStatus = "in-progress" | "completed";
+
 export interface Project {
   title: string;
   description: string;
@@ -49,7 +51,9 @@ export interface Project {
   imageUrl: string;
   tags: string[];
   demoUrl: string;
+  githubUrl: string;
   span?: string;
+  projectStatus: ProjectStatus;
 }
 
 export interface FeaturedProject {
@@ -58,6 +62,8 @@ export interface FeaturedProject {
   imageUrl: string;
   tags: string[];
   demoUrl: string;
+  githubUrl: string;
+  projectStatus: ProjectStatus;
 }
 
 export interface HeadlineData {

@@ -135,7 +135,7 @@ export default function Projects({ id }: ProjectsProps) {
                       asChild
                     >
                       <a
-                        href={featuredProject.demoUrl}
+                        href={featuredProject.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
