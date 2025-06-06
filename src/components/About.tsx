@@ -149,7 +149,7 @@ export default function About({ id }: AboutProps) {
     <section
       ref={ref}
       id={id}
-      className="py-20 md:py-28 bg-gradient-to-b from-gray-900 to-black text-gray-200"
+      className="min-h-[70vh] py-20 md:py-28 bg-gradient-to-b from-gray-900 to-black text-gray-200"
     >
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">

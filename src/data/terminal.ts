@@ -3,7 +3,7 @@ import { TerminalCommand } from "./types";
 export const terminalCommands: TerminalCommand[] = [
   {
     command: "whoami",
-    output: ["Godwin O. • Product Engineer & AI Agents Specialist"],
+    output: ["Godwin O. • Product Engineer & AI Agents Enthusiast"],
   },
   {
     command: "echo $MISSION",
@@ -15,7 +15,7 @@ export const terminalCommands: TerminalCommand[] = [
   {
     command: "cat skills.txt",
     output: [
-      "Product Engineering • Frontend Development • Design Systems • Backend Development • API Design",
+      "Product Engineering • Full-Stack Engineering • Design Systems • API Design",
       "AI Agents • LLMs • RAG • LLM APIs • Prompt Engineering • Cloud Architecture",
     ],
   },
