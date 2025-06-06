@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/tooltip";
 import { personalInfo } from "@/data";
 import { motion } from "framer-motion";
-import { Download, Github, Linkedin, Mail, X } from "lucide-react";
+import { Download, Github, Linkedin, Mail } from "lucide-react";
 import { TechStackShowcase } from "./TechStackShowcase";
 
 export default function Footer() {
@@ -26,12 +26,6 @@ export default function Footer() {
       label: "LinkedIn",
       icon: Linkedin,
       tooltip: "Connect/Chat on LinkedIn",
-    },
-    {
-      href: personalInfo.xUrl,
-      label: "X (formerly Twitter)",
-      icon: X,
-      tooltip: "Follow on X",
     },
     {
       href: `mailto:${personalInfo.email}`,
