@@ -137,10 +137,10 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
 
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 tracking-tight">
           <div className="text-white mb-2">Creative Solutions</div>
-          <div className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-violet-400 to-cyan-400 relative">
+          <div className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-violet-400 to-cyan-400 relative inline-block">
             <code className="font-mono bg-transparent">Code & AI</code>
             <svg
-              className="absolute -bottom-4 left-1/2 transform -translate-x-2/2 w-2/4"
+              className="absolute -bottom-4 left-0 w-full"
               height="10"
               viewBox="0 0 100 10"
               preserveAspectRatio="none"
