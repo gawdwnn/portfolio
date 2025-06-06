@@ -26,7 +26,12 @@ interface HeadlineColumnProps {
   onBookCallClick: () => void;
 }
 
-const StatCard = ({ value, label, icon: Icon, hoverColor }: {
+const StatCard = ({
+  value,
+  label,
+  icon: Icon,
+  hoverColor,
+}: {
   value: string | number;
   label: string;
   icon: any;
@@ -42,13 +47,21 @@ const StatCard = ({ value, label, icon: Icon, hoverColor }: {
   >
     <div className="flex items-center justify-between mb-1">
       <div className="text-3xl font-bold text-white">{value}+</div>
-      <Icon className={`w-5 h-5 text-white/40 group-hover:${hoverColor} transition-colors`} />
+      <Icon
+        className={`w-5 h-5 text-white/40 ${hoverColor} transition-colors`}
+      />
     </div>
     <div className="text-white/60 text-sm">{label}</div>
   </motion.div>
 );
 
-const SocialLink = ({ href, icon: Icon, label, tooltip, target = "_blank" }: {
+const SocialLink = ({
+  href,
+  icon: Icon,
+  label,
+  tooltip,
+  target = "_blank",
+}: {
   href: string;
   icon: any;
   label: string;
@@ -122,12 +135,12 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
           </span>
         </motion.div>
 
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 tracking-tight text-center">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 tracking-tight">
           <div className="text-white mb-2">Creative Solutions</div>
           <div className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-violet-400 to-cyan-400 relative">
             <code className="font-mono bg-transparent">Code & AI</code>
             <svg
-              className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-2/4"
+              className="absolute -bottom-4 left-1/2 transform -translate-x-2/2 w-2/4"
               height="10"
               viewBox="0 0 100 10"
               preserveAspectRatio="none"
@@ -167,25 +180,25 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
             value={stats.years}
             label="Years Experience"
             icon={Briefcase}
-            hoverColor="text-cyan-400"
+            hoverColor="group-hover:text-cyan-400"
           />
           <StatCard
             value={stats.projects}
             label="Projects Completed"
             icon={Code}
-            hoverColor="text-violet-400"
+            hoverColor="group-hover:text-violet-400"
           />
           <StatCard
             value={stats.clients}
             label="Happy Clients"
             icon={Users}
-            hoverColor="text-indigo-400"
+            hoverColor="group-hover:text-indigo-400"
           />
           <StatCard
             value={stats.aiSolutions}
             label="AI Solutions"
             icon={BrainCircuit}
-            hoverColor="text-emerald-400"
+            hoverColor="group-hover:text-emerald-400"
           />
         </div>
 
