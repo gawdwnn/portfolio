@@ -130,7 +130,7 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
           className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-900/40 border border-indigo-500/30 text-indigo-300 mb-6 shadow-sm"
         >
           <GitBranch className="w-3.5 h-3.5 opacity-80" />
-          <span className="text-xs text-white/60">
+          <span className="text-sm text-white/60">
             <AnimatedTextCycle words={words} constrainWidth={true} />
           </span>
         </motion.div>

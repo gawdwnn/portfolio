@@ -7,9 +7,10 @@ export const experiences: Experience[] = [
     companyUrl: "https://factorialhr.com",
     period: "Feb 2023 – Jan 2024",
     highlights: [
-      "Developed intuitive UIs with React.js & React Native for expense management component of Fa.",
-      "Designed RESTful APIs for real-time financial data processing.",
+      "Built and maintained frontend and backend services for robust expense tracking and management including cards, budgets, reports,  automating expenses approval workflows, on-time reimbursements.",
       "Ensured seamless integration between frontend and backend services.",
+      "Implemented CI/CD workflows enhancing team productivity and code quality.",
+      "Collaborated with cross-functional teams to deliver high-quality software solutions.",
     ],
     techStack: [
       "TypeScript",
