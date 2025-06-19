@@ -1,6 +1,6 @@
+import TerminalWindow from "@/components/TerminalWindow";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { KeyboardEvent, ReactNode, useState } from "react";
-import TerminalWindow from "@/components/TerminalWindow";
 
 export interface TerminalResponse {
   command: string;
@@ -63,7 +63,7 @@ const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
       headerClassName={headerClassName}
       className={className}
     >
-      <div className="font-mono text-sm leading-relaxed">
+      <div className="font-mono text-base md:text-sm leading-relaxed">
         <AnimatePresence>
           {/* Initial content */}
           {initialContent.map((content, index) => (
@@ -108,7 +108,7 @@ const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
                 value={userQuery}
                 onChange={(e) => setUserQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex-1 bg-transparent outline-none"
+                className="flex-1 bg-transparent outline-none text-base md:text-sm"
                 placeholder="Type a command..."
                 autoFocus={autoFocus}
               />

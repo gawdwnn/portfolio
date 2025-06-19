@@ -1,13 +1,21 @@
 import Providers from "@/components/Providers";
 import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { JetBrains_Mono, Montserrat } from "next/font/google";
 import "./globals.css";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   display: "swap",
   fallback: ["Arial", "sans-serif"],
+  preload: true,
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-mono",
+  fallback: ["Consolas", "Monaco", "Courier New", "monospace"],
   preload: true,
 });
 
@@ -26,7 +34,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${montserrat.className} antialiased`}>
+      <body
+        className={`${montserrat.className} ${jetbrainsMono.variable} antialiased`}
+      >
         <Providers>{children}</Providers>
         <Toaster />
       </body>

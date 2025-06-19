@@ -2,11 +2,11 @@
 
 import { HoverBorderGradient } from "@/components/HoverBorderGradient";
 import InteractiveTerminal from "@/components/InteractiveTerminal";
-import TypewriterText from "@/components/TypewriterText";
-import { personalInfo } from "@/data";
+import StreamingText from "@/components/StreamingText";
+import { aboutCommands, aboutContent, personalInfo } from "@/data";
 import { motion } from "framer-motion";
 import { Code, Github, Globe, Mail, Terminal, User } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
 
 interface AboutProps {
@@ -14,123 +14,162 @@ interface AboutProps {
 }
 
 export default function About({ id }: AboutProps) {
-  const sectionRef = useRef<HTMLElement>(null);
   const { isIntersecting, ref } = useIntersectionObserver({
     threshold: 0.25,
-    freezeOnceVisible: false,
+    freezeOnceVisible: true,
   });
 
   const [hasStarted, setHasStarted] = useState(false);
-  const [terminalStage, setTerminalStage] = useState(0);
+  const [showPersonalInfo, setShowPersonalInfo] = useState(false);
+  const [showBio, setShowBio] = useState(false);
+  const [showInteractive, setShowInteractive] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
 
+  const shouldStart = isIntersecting && !hasStarted;
+
+  // Create contact links component
+  const contactLinksComponent = (
+    <div className="space-y-2">
+      <div className="flex items-center">
+        <Mail className="w-4 h-4 mr-2 text-blue-400" />
+        <span className="text-gray-300">Email: </span>
+        <a
+          href={`mailto:${personalInfo.email}`}
+          className="text-blue-400 hover:text-blue-300 underline ml-1 transition-colors"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {personalInfo.email}
+        </a>
+      </div>
+      <div className="flex items-center">
+        <Github className="w-4 h-4 mr-2 text-purple-400" />
+        <span className="text-gray-300">GitHub: </span>
+        <a
+          href={personalInfo.githubUrl}
+          className="text-purple-400 hover:text-purple-300 underline ml-1 transition-colors"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {personalInfo.githubUrl}
+        </a>
+      </div>
+      {personalInfo.linkedinUrl && (
+        <div className="flex items-center">
+          <Globe className="w-4 h-4 mr-2 text-green-400" />
+          <span className="text-gray-300">LinkedIn: </span>
+          <a
+            href={personalInfo.linkedinUrl}
+            className="text-green-400 hover:text-green-300 underline ml-1 transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {personalInfo.linkedinUrl}
+          </a>
+        </div>
+      )}
+      {personalInfo.resumeUrl && (
+        <div className="flex items-center">
+          <Code className="w-4 h-4 mr-2 text-yellow-400" />
+          <span className="text-gray-300">Resume: </span>
+          <a
+            href={personalInfo.resumeUrl}
+            className="text-yellow-400 hover:text-yellow-300 underline ml-1 transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Resume
+          </a>
+        </div>
+      )}
+    </div>
+  );
+
+  // Create the final commands object with JSX contact component
   const availableCommands = {
-    help: "Available commands: skills, experience, education, contact, clear",
-    skills:
-      "TypeScript, React, Next.js, Node.js, Python, AWS, Docker, CI/CD, GraphQL",
-    experience:
-      "• 5 years of Software Engineering\n• Led feature development in agile teams\n• Built scalable solutions for B2B and B2C startups",
-    education:
-      "• Software Development, Conestoga College, Waterloo\n• Continuing education in AI and Machine Learning",
-    contact: `Email: ${personalInfo.email}\nGitHub: ${personalInfo.githubUrl}`,
-    clear: "CLEAR_COMMAND",
+    ...aboutCommands,
+    contact: contactLinksComponent,
   };
-
-  useEffect(() => {
-    if (isIntersecting && !hasStarted) {
-      setHasStarted(true);
-      setTerminalStage(1);
-    }
-  }, [isIntersecting, hasStarted]);
-
-  useEffect(() => {
-    if (!hasStarted) return;
-
-    if (terminalStage > 0 && terminalStage < 3) {
-      const timer = setTimeout(() => {
-        setTerminalStage((prev) => prev + 1);
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [terminalStage, hasStarted]);
-
-  useEffect(() => {
-    if (terminalStage === 4) {
-      const timer = setTimeout(() => {
-        setShowPrompt(true);
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [terminalStage]);
 
   const getInitialContent = () => {
     const content = [];
 
     if (!hasStarted) {
-      content.push(
-        <div key="placeholder" className="text-neutral-500">
-          Terminal initializing...
-        </div>
-      );
-      return content;
+      if (shouldStart) {
+        setHasStarted(true);
+      } else {
+        return [
+          <div key="placeholder" className="text-neutral-500">
+            {aboutContent.messages.placeholder}
+          </div>,
+        ];
+      }
     }
 
-    if (terminalStage >= 1) {
-      content.push(
-        <TypewriterText
-          key="init"
-          text="Initializing profile data..."
-          className="text-green-400"
-        />
-      );
-    }
+    content.push(
+      <StreamingText
+        key="init"
+        content={aboutContent.messages.initializing}
+        className="text-green-400"
+        speed="human"
+        cursor={{ style: "block", blink: true, color: "#10b981" }}
+        onComplete={() => setShowPersonalInfo(true)}
+        autoStart={hasStarted}
+      />
+    );
 
-    if (terminalStage >= 2) {
+    if (showPersonalInfo) {
       content.push(
         <div key="personal-info" className="mt-4">
-          <TypewriterText
-            text="Loading personal information..."
-            speed={30}
+          <StreamingText
+            content={aboutContent.messages.loadingPersonal}
+            speed="fast"
             className="text-blue-400"
+            cursor={{ style: "underscore", blink: true, color: "#3b82f6" }}
+            onComplete={() => setShowBio(true)}
           />
           <div className="mt-3 pl-4 border-l-2 border-indigo-500/30">
             <div className="flex items-center mb-2">
               <User className="w-4 h-4 mr-2 text-indigo-400" />
-              <TypewriterText text={personalInfo.name} speed={50} />
+              <StreamingText content={personalInfo.name} speed="normal" />
             </div>
             <div className="flex items-center mb-2">
               <Code className="w-4 h-4 mr-2 text-indigo-400" />
-              <TypewriterText text={personalInfo.title} speed={50} />
+              <StreamingText content={personalInfo.title} speed="normal" />
             </div>
             <div className="flex items-center mb-2">
               <Globe className="w-4 h-4 mr-2 text-indigo-400" />
-              <TypewriterText text={personalInfo.location} speed={50} />
+              <StreamingText content={personalInfo.location} speed="normal" />
             </div>
           </div>
         </div>
       );
     }
 
-    if (terminalStage >= 3) {
+    if (showBio) {
       content.push(
-        <TypewriterText
+        <StreamingText
           key="bio"
-          text={personalInfo.bio}
-          speed={10}
+          content={aboutContent.profileDescription}
+          speed="human"
           className="text-gray-300 mt-4"
-          onComplete={() => setTerminalStage(4)}
+          onComplete={() => setShowInteractive(true)}
+          cursor={{ style: "line", blink: true, color: "#d1d5db" }}
+          pauseOnPunctuation={300}
+          interactive={true}
         />
       );
     }
 
-    if (terminalStage >= 4) {
+    if (showInteractive) {
       content.push(
-        <TypewriterText
+        <StreamingText
           key="interactive"
-          text="Interactive mode activated. Type 'help' for available commands."
-          speed={15}
+          content={aboutContent.messages.interactiveMode}
+          speed="normal"
           className="text-yellow-300 mt-4"
-          onComplete={() => setTerminalStage(4)}
+          onComplete={() => setShowPrompt(true)}
+          cursor={{ style: "line", blink: true, color: "#fde047" }}
         />
       );
     }
@@ -141,7 +180,7 @@ export default function About({ id }: AboutProps) {
   const customTitle = (
     <div className="flex items-center text-sm font-mono">
       <Terminal className="w-4 h-4 mr-2" />
-      <span>about.sh — godwin@portfolio</span>
+      <span>{aboutContent.terminalTitle}</span>
     </div>
   );
 
@@ -154,10 +193,10 @@ export default function About({ id }: AboutProps) {
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-2 text-white">
-            Snapshot
+            {aboutContent.title}
           </h2>
           <p className="text-center text-neutral-400 mb-12 max-w-2xl mx-auto">
-            Software engineer with a passion for building impactful solutions
+            {aboutContent.subtitle}
           </p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
