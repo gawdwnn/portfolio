@@ -17,7 +17,7 @@ export const headlineData: HeadlineData = {
   stats: {
     years: 5,
     projects: 50,
-    clients: 20,
-    aiSolutions: 10,
+    clients: 201,
+    aiSolutions: 5,
   },
 };
