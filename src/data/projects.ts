@@ -5,11 +5,8 @@ export const projects: Project[] = [];
 export const featuredProject: FeaturedProject = {
   title: "StudyLoopAI",
   description: `
-    StudyLoop is a web-based, AI-powered platform designed to empower college students to study smarter, not harder. By leveraging advanced adaptive tools and a learning gap algorithm, StudyLoop transforms uploaded course materials—PDFs, slides, notes, and more—into personalized smart summaries, adaptive quizzes, flashcards, and gamified learning experiences.
-
-    Our closed-loop learning engine guides students through a seamless cycle: upload materials, understand content, practice with tailored tools, diagnose weaknesses, refine knowledge, and simulate exams—all in a privacy-first, engaging environment. Think of StudyLoop as the Duolingo of personalized studying: rewarding, accessible, and efficient.
-
-    With StudyLoop, college students gain a tailored, effective study solution to excel in their academic journey.
+    StudyLoopAI is an AI-powered personalized study platform that transforms your course materials into a complete adaptive learning experience. 
+    Students simply upload course content, and the platform instantly generates smart summaries, adaptive quizzes, cuecards, contentmaps, and personalized study plans that evolve based on performance.
     `,
   tags: [
     "TypeScript",
