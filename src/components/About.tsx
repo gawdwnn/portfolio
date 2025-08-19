@@ -4,31 +4,32 @@ import { HoverBorderGradient } from "@/components/HoverBorderGradient";
 import InteractiveTerminal from "@/components/InteractiveTerminal";
 import StreamingText from "@/components/StreamingText";
 import { aboutCommands, aboutContent, personalInfo } from "@/data";
-import { motion } from "framer-motion";
+import { BACKGROUND_STYLES } from "@/lib/background-styles";
 import { Code, Github, Globe, Mail, Terminal, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIntersectionObserver } from "usehooks-ts";
 
 interface AboutProps {
   id?: string;
 }
 
+type AnimationStep = 'idle' | 'initializing' | 'personal' | 'bio' | 'interactive' | 'prompt';
+
 export default function About({ id }: AboutProps) {
   const { isIntersecting, ref } = useIntersectionObserver({
-    threshold: 0.25,
+    threshold: 0.1,
     freezeOnceVisible: true,
   });
 
-  const [hasStarted, setHasStarted] = useState(false);
-  const [showPersonalInfo, setShowPersonalInfo] = useState(false);
-  const [showBio, setShowBio] = useState(false);
-  const [showInteractive, setShowInteractive] = useState(false);
-  const [showPrompt, setShowPrompt] = useState(false);
+  const [currentStep, setCurrentStep] = useState<AnimationStep>('idle');
 
-  const shouldStart = isIntersecting && !hasStarted;
+  useEffect(() => {
+    if (isIntersecting && currentStep === 'idle') {
+      setCurrentStep('initializing');
+    }
+  }, [isIntersecting, currentStep]);
 
-  // Create contact links component
-  const contactLinksComponent = (
+  const ContactLinks = () => (
     <div className="space-y-2">
       <div className="flex items-center">
         <Mail className="w-4 h-4 mr-2 text-blue-400" />
@@ -85,96 +86,213 @@ export default function About({ id }: AboutProps) {
     </div>
   );
 
-  // Create the final commands object with JSX contact component
   const availableCommands = {
     ...aboutCommands,
-    contact: contactLinksComponent,
+    contact: <ContactLinks />,
   };
 
-  const getInitialContent = () => {
-    const content = [];
-
-    if (!hasStarted) {
-      if (shouldStart) {
-        setHasStarted(true);
-      } else {
+  const getStepContent = (step: AnimationStep) => {
+    switch (step) {
+      case 'idle':
         return [
           <div key="placeholder" className="text-neutral-500">
             {aboutContent.messages.placeholder}
           </div>,
         ];
-      }
-    }
 
-    content.push(
-      <StreamingText
-        key="init"
-        content={aboutContent.messages.initializing}
-        className="text-green-400"
-        speed="human"
-        cursor={{ style: "block", blink: true, color: "#10b981" }}
-        onComplete={() => setShowPersonalInfo(true)}
-        autoStart={hasStarted}
-      />
-    );
-
-    if (showPersonalInfo) {
-      content.push(
-        <div key="personal-info" className="mt-4">
+      case 'initializing':
+        return [
           <StreamingText
-            content={aboutContent.messages.loadingPersonal}
-            speed="fast"
-            className="text-blue-400"
-            cursor={{ style: "underscore", blink: true, color: "#3b82f6" }}
-            onComplete={() => setShowBio(true)}
+            key="init"
+            content={aboutContent.messages.initializing}
+            className="text-green-400"
+            speed="human"
+            cursor={{ style: "block", blink: true, color: "#10b981" }}
+            onComplete={() => setCurrentStep('personal')}
+            autoStart={true}
           />
-          <div className="mt-3 pl-4 border-l-2 border-indigo-500/30">
-            <div className="flex items-center mb-2">
-              <User className="w-4 h-4 mr-2 text-indigo-400" />
-              <StreamingText content={personalInfo.name} speed="normal" />
-            </div>
-            <div className="flex items-center mb-2">
-              <Code className="w-4 h-4 mr-2 text-indigo-400" />
-              <StreamingText content={personalInfo.title} speed="normal" />
-            </div>
-            <div className="flex items-center mb-2">
-              <Globe className="w-4 h-4 mr-2 text-indigo-400" />
-              <StreamingText content={personalInfo.location} speed="normal" />
+        ];
+
+      case 'personal':
+        return [
+          <StreamingText
+            key="init"
+            content={aboutContent.messages.initializing}
+            className="text-green-400"
+            speed="human"
+            cursor={{ style: "block", blink: true, color: "#10b981" }}
+          />,
+          <div key="personal-info" className="mt-4">
+            <StreamingText
+              content={aboutContent.messages.loadingPersonal}
+              speed="fast"
+              className="text-blue-400"
+              cursor={{ style: "underscore", blink: true, color: "#3b82f6" }}
+              onComplete={() => setCurrentStep('bio')}
+              autoStart={true}
+            />
+            <div className="mt-3 pl-4 border-l-2 border-indigo-500/30">
+              <div className="flex items-center mb-2">
+                <User className="w-4 h-4 mr-2 text-indigo-400" />
+                <StreamingText content={personalInfo.name} speed="normal" />
+              </div>
+              <div className="flex items-center mb-2">
+                <Code className="w-4 h-4 mr-2 text-indigo-400" />
+                <StreamingText content={personalInfo.title} speed="normal" />
+              </div>
+              <div className="flex items-center mb-2">
+                <Globe className="w-4 h-4 mr-2 text-indigo-400" />
+                <StreamingText content={personalInfo.location} speed="normal" />
+              </div>
             </div>
           </div>
-        </div>
-      );
-    }
+        ];
 
-    if (showBio) {
-      content.push(
-        <StreamingText
-          key="bio"
-          content={aboutContent.profileDescription}
-          speed="human"
-          className="text-gray-300 mt-4"
-          onComplete={() => setShowInteractive(true)}
-          cursor={{ style: "line", blink: true, color: "#d1d5db" }}
-          pauseOnPunctuation={300}
-          interactive={true}
-        />
-      );
-    }
+      case 'bio':
+        return [
+          <StreamingText
+            key="init"
+            content={aboutContent.messages.initializing}
+            className="text-green-400"
+            speed="human"
+            cursor={{ style: "block", blink: true, color: "#10b981" }}
+          />,
+          <div key="personal-info" className="mt-4">
+            <StreamingText
+              content={aboutContent.messages.loadingPersonal}
+              speed="fast"
+              className="text-blue-400"
+              cursor={{ style: "underscore", blink: true, color: "#3b82f6" }}
+            />
+            <div className="mt-3 pl-4 border-l-2 border-indigo-500/30">
+              <div className="flex items-center mb-2">
+                <User className="w-4 h-4 mr-2 text-indigo-400" />
+                <StreamingText content={personalInfo.name} speed="normal" />
+              </div>
+              <div className="flex items-center mb-2">
+                <Code className="w-4 h-4 mr-2 text-indigo-400" />
+                <StreamingText content={personalInfo.title} speed="normal" />
+              </div>
+              <div className="flex items-center mb-2">
+                <Globe className="w-4 h-4 mr-2 text-indigo-400" />
+                <StreamingText content={personalInfo.location} speed="normal" />
+              </div>
+            </div>
+          </div>,
+          <StreamingText
+            key="bio"
+            content={aboutContent.profileDescription}
+            speed="human"
+            className="text-gray-300 mt-4"
+            onComplete={() => setCurrentStep('interactive')}
+            cursor={{ style: "line", blink: true, color: "#d1d5db" }}
+            pauseOnPunctuation={300}
+            interactive={true}
+            autoStart={true}
+          />
+        ];
 
-    if (showInteractive) {
-      content.push(
-        <StreamingText
-          key="interactive"
-          content={aboutContent.messages.interactiveMode}
-          speed="normal"
-          className="text-yellow-300 mt-4"
-          onComplete={() => setShowPrompt(true)}
-          cursor={{ style: "line", blink: true, color: "#fde047" }}
-        />
-      );
-    }
+      case 'interactive':
+        return [
+          <StreamingText
+            key="init"
+            content={aboutContent.messages.initializing}
+            className="text-green-400"
+            speed="human"
+            cursor={{ style: "block", blink: true, color: "#10b981" }}
+          />,
+          <div key="personal-info" className="mt-4">
+            <StreamingText
+              content={aboutContent.messages.loadingPersonal}
+              speed="fast"
+              className="text-blue-400"
+              cursor={{ style: "underscore", blink: true, color: "#3b82f6" }}
+            />
+            <div className="mt-3 pl-4 border-l-2 border-indigo-500/30">
+              <div className="flex items-center mb-2">
+                <User className="w-4 h-4 mr-2 text-indigo-400" />
+                <StreamingText content={personalInfo.name} speed="normal" />
+              </div>
+              <div className="flex items-center mb-2">
+                <Code className="w-4 h-4 mr-2 text-indigo-400" />
+                <StreamingText content={personalInfo.title} speed="normal" />
+              </div>
+              <div className="flex items-center mb-2">
+                <Globe className="w-4 h-4 mr-2 text-indigo-400" />
+                <StreamingText content={personalInfo.location} speed="normal" />
+              </div>
+            </div>
+          </div>,
+          <StreamingText
+            key="bio"
+            content={aboutContent.profileDescription}
+            speed="human"
+            className="text-gray-300 mt-4"
+            cursor={{ style: "line", blink: true, color: "#d1d5db" }}
+            pauseOnPunctuation={300}
+            interactive={true}
+          />,
+          <StreamingText
+            key="interactive"
+            content={aboutContent.messages.interactiveMode}
+            speed="normal"
+            className="text-yellow-300 mt-4"
+            onComplete={() => setCurrentStep('prompt')}
+            cursor={{ style: "line", blink: true, color: "#fde047" }}
+            autoStart={true}
+          />
+        ];
 
-    return content;
+      case 'prompt':
+      default:
+        return [
+          <StreamingText
+            key="init"
+            content={aboutContent.messages.initializing}
+            className="text-green-400"
+            speed="human"
+            cursor={{ style: "block", blink: true, color: "#10b981" }}
+          />,
+          <div key="personal-info" className="mt-4">
+            <StreamingText
+              content={aboutContent.messages.loadingPersonal}
+              speed="fast"
+              className="text-blue-400"
+              cursor={{ style: "underscore", blink: true, color: "#3b82f6" }}
+            />
+            <div className="mt-3 pl-4 border-l-2 border-indigo-500/30">
+              <div className="flex items-center mb-2">
+                <User className="w-4 h-4 mr-2 text-indigo-400" />
+                <StreamingText content={personalInfo.name} speed="normal" />
+              </div>
+              <div className="flex items-center mb-2">
+                <Code className="w-4 h-4 mr-2 text-indigo-400" />
+                <StreamingText content={personalInfo.title} speed="normal" />
+              </div>
+              <div className="flex items-center mb-2">
+                <Globe className="w-4 h-4 mr-2 text-indigo-400" />
+                <StreamingText content={personalInfo.location} speed="normal" />
+              </div>
+            </div>
+          </div>,
+          <StreamingText
+            key="bio"
+            content={aboutContent.profileDescription}
+            speed="human"
+            className="text-gray-300 mt-4"
+            cursor={{ style: "line", blink: true, color: "#d1d5db" }}
+            pauseOnPunctuation={300}
+            interactive={true}
+          />,
+          <StreamingText
+            key="interactive"
+            content={aboutContent.messages.interactiveMode}
+            speed="normal"
+            className="text-yellow-300 mt-4"
+            cursor={{ style: "line", blink: true, color: "#fde047" }}
+          />
+        ];
+    }
   };
 
   const customTitle = (
@@ -188,7 +306,7 @@ export default function About({ id }: AboutProps) {
     <section
       ref={ref}
       id={id}
-      className="min-h-[70vh] py-20 md:py-28 bg-gradient-to-b from-gray-900 to-black text-gray-200"
+      className={`min-h-[70vh] py-20 md:py-28 ${BACKGROUND_STYLES.sectionBorderBoth} ${BACKGROUND_STYLES.section} text-gray-200`}
     >
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
@@ -198,22 +316,18 @@ export default function About({ id }: AboutProps) {
           <p className="text-center text-neutral-400 mb-12 max-w-2xl mx-auto">
             {aboutContent.subtitle}
           </p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <div>
             <InteractiveTerminal
               title="about.sh — godwin@portfolio"
               titleContent={customTitle}
               headerClassName="bg-gray-800 px-4 py-2"
-              initialContent={getInitialContent()}
-              showPrompt={showPrompt}
+              initialContent={getStepContent(currentStep)}
+              showPrompt={currentStep === 'prompt'}
               availableCommands={availableCommands}
               className="bg-gray-900 rounded-xl border border-gray-800 shadow-2xl"
-              autoFocus={showPrompt && isIntersecting}
+              autoFocus={currentStep === 'prompt' && isIntersecting}
             />
-          </motion.div>
+          </div>
 
           <div className="mt-8 text-center">
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
