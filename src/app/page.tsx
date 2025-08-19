@@ -15,12 +15,10 @@ export default function Home() {
 
   return (
     <>
-      <main className="flex min-h-screen flex-col text-foreground overflow-x-hidden antialiased relative">
+      <main className="bg-neutral-950 flex min-h-screen flex-col text-white overflow-x-hidden antialiased relative">
         <ParticleBackground />
 
-        <AnimatedSection>
-          <Hero id="hero-section" onBookCallClick={openBookingModal} />
-        </AnimatedSection>
+        <Hero id="hero-section" onBookCallClick={openBookingModal} />
 
         <AnimatedSection>
           <Projects id="projects-section" />
