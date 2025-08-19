@@ -31,33 +31,49 @@ export default function FeaturedProject() {
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
             {/* Live Preview Section */}
             <div className="lg:col-span-3 relative">
-              <div className="relative aspect-video rounded-xl overflow-hidden bg-zinc-800/50 shadow-2xl">
-                <iframe
-                  src={featuredProject.demoUrl}
-                  className="absolute inset-0 w-full h-full transform-gpu transition-all duration-700 group-hover:scale-105"
-                  frameBorder="0"
-                  loading="lazy"
-                  sandbox="allow-scripts allow-same-origin"
-                />
+              <div 
+                className="relative aspect-video rounded-xl overflow-hidden bg-zinc-800/50 shadow-2xl cursor-pointer group/preview"
+                onClick={() => window.open(featuredProject.demoUrl, "_blank")}
+              >
+                {featuredProject.screenshot ? (
+                  <img
+                    src={featuredProject.screenshot}
+                    alt={`${featuredProject.title} preview`}
+                    className="absolute inset-0 w-full h-full object-cover transform-gpu transition-all duration-700 group-hover:scale-105"
+                  />
+                ) : (
+                  /* Safer iframe implementation */
+                  <iframe
+                    src={featuredProject.demoUrl}
+                    className="absolute inset-0 w-full h-full transform-gpu transition-all duration-700 group-hover:scale-105"
+                    title={`${featuredProject.title} preview`}
+                    loading="lazy"
+                    sandbox="allow-scripts allow-forms allow-popups allow-top-navigation"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    onError={() => console.log('iframe failed to load')}
+                    style={{ 
+                      border: 'none',
+                      background: 'linear-gradient(135deg, #3f3f46, #27272a)'
+                    }}
+                  />
+                )}
+                
                 {/* Overlay gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
 
-                {/* Featured badge */}
-                <div className="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg z-10">
-                  Live Preview
-                </div>
-
                 {/* Hover overlay */}
-                <div
-                  className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10 cursor-pointer"
-                  onClick={() => window.open(featuredProject.demoUrl, "_blank")}
-                >
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/preview:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <div className="text-center">
                     <div className="w-16 h-16 mx-auto mb-4 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
                       <ExternalLink className="w-8 h-8 text-white" />
                     </div>
-                    <p className="text-white/90 text-sm">Click to interact</p>
+                    <p className="text-white/90 text-sm">Click to open project</p>
                   </div>
+                </div>
+
+                {/* Featured badge */}
+                <div className="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg z-10">
+                  Preview
                 </div>
               </div>
             </div>
@@ -111,10 +127,10 @@ export default function FeaturedProject() {
                   )}
                 </div>
 
-                {/* Technology Tags */}
+                {/* Tools Tags */}
                 <div className="space-y-3">
                   <h4 className="text-sm font-medium text-gray-400 uppercase tracking-wider">
-                    Technologies
+                    Tools
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {featuredProject.tags.map((tag, index) => (

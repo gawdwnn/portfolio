@@ -5,6 +5,7 @@ import HeadlineColumn from "@/components/HeadlineColumn";
 import HeroBackground from "@/components/HeroBackground";
 import TerminalColumn from "@/components/TerminalColumn";
 import { terminalCommands } from "@/data";
+import { BACKGROUND_STYLES } from "@/lib/background-styles";
 import { useTerminalState } from "@/hooks/useTerminalState";
 import { useEffect, useMemo, useRef } from "react";
 
@@ -52,7 +53,7 @@ export default function Hero({ onBookCallClick, id }: HeroProps) {
   }, [handleReplay]);
 
   return (
-    <section id={id} className="relative min-h-screen w-full">
+    <section id={id} className={`relative min-h-screen w-full ${BACKGROUND_STYLES.sectionBorderBottom} ${BACKGROUND_STYLES.section}`}>
       <HeroBackground />
 
       <div className="container relative z-10 mx-auto px-4 py-12 sm:py-20 min-h-screen flex flex-col justify-center">

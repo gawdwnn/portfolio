@@ -106,7 +106,7 @@ export function TechStackShowcase() {
         <div className="text-center text-2xl sm:text-3xl text-neutral-200 mb-8 sm:mb-12">
           <span className="text-neutral-400">Building with modern</span>
           <br />
-          <span>technologies.</span>
+          <span>tools & workflows.</span>
         </div>
 
         <div className="relative h-[80px] sm:h-[120px] w-full">
