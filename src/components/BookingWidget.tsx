@@ -44,12 +44,12 @@ export default function BookingWidget({
     >
       <SheetContent
         side="right"
-        className="w-full sm:max-w-[95%] md:max-w-[80%] lg:max-w-[1200px] p-0 border-l bg-background"
+        className="w-full sm:max-w-[95%] md:max-w-[80%] lg:max-w-[1200px] p-0 border-l bg-neutral-950 text-white"
         onPointerDownOutside={(e) => {
           e.preventDefault();
         }}
       >
-        <SheetHeader className="p-4 border-b">
+        <SheetHeader className="p-4 border-b border-neutral-800">
           <SheetTitle className="text-xl font-semibold">
             Schedule a Call
           </SheetTitle>

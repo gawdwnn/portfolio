@@ -1,8 +1,8 @@
 "use client";
 
-import { Tiles } from "@/components/Tiles";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { education, experiences, techSkills } from "@/data";
+import { BACKGROUND_STYLES } from "@/lib/background-styles";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
@@ -226,22 +226,21 @@ export default function Skills({ id }: SkillsProps) {
   return (
     <section
       id={id}
-      className="min-h-[80vh] py-16 md:py-24 relative overflow-hidden text-white"
+      className={`min-h-[80vh] py-16 md:py-24 relative overflow-hidden text-white ${BACKGROUND_STYLES.sectionBorderBoth} ${BACKGROUND_STYLES.section}`}
     >
-      <div className="absolute inset-0 z-0 opacity-20">
-        <Tiles />
-      </div>
+      {/* Grid Pattern Background */}
+      <div className={BACKGROUND_STYLES.gridPattern} />
 
-      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+      {/* Subtle color overlays for visual interest */}
+      <div className={BACKGROUND_STYLES.blueAccent}></div>
+      <div className={BACKGROUND_STYLES.purpleAccent}></div>
 
       <div className="container relative z-10 mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-2 bg-clip-text text-transparent dark:text-white">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-2 text-white">
           Path & Journey
         </h2>
         <p className="text-center text-neutral-400 mb-12 max-w-2xl mx-auto">
-          Building at the intersection of design, code, and artificial
-          intelligence
+          Building at the intersection of design, code, and Agentic AI
         </p>
 
         <div className="flex justify-center mb-12">
@@ -250,16 +249,16 @@ export default function Skills({ id }: SkillsProps) {
             onValueChange={handleTabChange}
             className="w-full flex flex-col items-center"
           >
-            <TabsList className="bg-neutral-900 border border-neutral-800 rounded-lg p-1 flex w-full mx-2 sm:mx-0 overflow-x-auto lg:w-auto lg:mx-auto">
+            <TabsList className="bg-neutral-900 border border-neutral-800 rounded-lg p-1 flex w-full mx-2 sm:mx-0 overflow-x-auto lg:w-fit lg:min-w-[400px] lg:mx-auto">
               {tabs.map((tab) => (
                 <TabsTrigger
                   key={tab.id}
                   value={tab.id}
                   className={cn(
                     "px-4 py-2 text-sm font-medium rounded-md transition-all",
-                    activeTab === tab.id
-                      ? "bg-blue-600 text-white shadow-lg"
-                      : "text-neutral-400 hover:text-white"
+                    "data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg",
+                    "data-[state=inactive]:text-neutral-400 data-[state=inactive]:hover:text-white",
+                    "data-[state=active]:border-transparent"
                   )}
                 >
                   {tab.label}

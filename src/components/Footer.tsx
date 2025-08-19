@@ -43,7 +43,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative bg-neutral-950 border-t border-neutral-900 text-neutral-500">
+    <footer className="relative bg-neutral-950 border-t border-neutral-800 text-neutral-500">
       <TechStackShowcase />
 
       <div className="relative z-10 pt-8 px-6">

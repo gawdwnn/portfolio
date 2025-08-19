@@ -8,13 +8,11 @@ import ModalProvider from "@/components/ModalProvider";
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
-    <ThemeProvider attribute="class">
-      <ModalProvider>
+    <ModalProvider>
         <CommandPaletteProvider>
           {children}
           <Toaster />
         </CommandPaletteProvider>
       </ModalProvider>
-    </ThemeProvider>
   );
 }

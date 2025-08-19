@@ -18,7 +18,7 @@ export const HeadlineTitle = () => {
       <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 tracking-tight">
         <div className="text-white mb-2">Creative Solutions</div>
         <div className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-violet-400 to-cyan-400 relative inline-block">
-          <code className="font-mono bg-transparent">Code & AI</code>
+          <code className="font-mono bg-transparent">Code & Agents</code>
           <svg
             className="absolute -bottom-4 left-0 w-full"
             height="10"

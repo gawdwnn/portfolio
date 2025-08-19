@@ -2,7 +2,7 @@ import { PersonalInfo } from "./types";
 
 export const personalInfo: PersonalInfo = {
   name: "Godwin O.",
-  title: "Product Engineer & AI Agents Enthusiast",
+  title: "Product Engineer",
   location: "Waterloo, ON CA",
   email: "gawdwnn@gmail.com",
   githubUrl: "https://github.com/gawdwnn",
