@@ -40,5 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# rules
-rules.mdc
+
+# IDE and documentation folders
+docs/
+.claude/
+.cursor/
+CLAUDE.md
