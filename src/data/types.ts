@@ -60,6 +60,7 @@ export interface FeaturedProject {
   title: string;
   description: string;
   imageUrl?: string;
+  screenshot?: string;
   tags: string[];
   demoUrl: string;
   githubUrl: string;

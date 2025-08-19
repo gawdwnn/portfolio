@@ -62,7 +62,7 @@ export const techSkills: Skill[] = [
     items: ["Unit Testing", "Automated Testing", "TDD", "E2E Testing"],
   },
   {
-    name: "AI & ML",
+    name: "Agentic AI",
     items: ["LLMs", "LLM APIs", "RAG", "Prompt Engineering", "AI Agents"],
   },
 ];

@@ -8,6 +8,7 @@ export const featuredProject: FeaturedProject = {
     StudyLoopAI is an AI-powered personalized study platform that transforms your course materials into a complete adaptive learning experience. 
     Students simply upload course content, and the platform instantly generates smart summaries, adaptive quizzes, cuecards, contentmaps, and personalized study plans that evolve based on performance.
     `,
+  screenshot: "",
   tags: [
     "TypeScript",
     "Next.js",
@@ -15,25 +16,12 @@ export const featuredProject: FeaturedProject = {
     "Shadcn/ui",
     "Supabase",
     "PG vector",
-    "RAG",
+    "Agentic RAG",
     "LLMs",
-    "AI Agents",
+    "Caching & Rate Limiting",
+    "Billing & Usage Analytics - Polar.sh",
   ],
   demoUrl: "https://studyloopai.vercel.app/",
   githubUrl: "https://github.com/gawdwnn/studyloopai",
-  projectStatus: "in-progress",
-  stats: [
-    {
-      label: "Users",
-      value: "++",
-    },
-    {
-      label: "Downloads",
-      value: "++",
-    },
-    {
-      label: "Active Users",
-      value: "++",
-    },
-  ],
+  projectStatus: "completed",
 };
