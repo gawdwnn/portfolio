@@ -473,7 +473,7 @@ const StreamingText: React.FC<StreamingTextProps> = ({
       </span>
 
       {interactive && (
-        <div className="mt-2 text-xs text-gray-500 opacity-50">
+        <div className="hidden md:block mt-2 text-xs text-gray-500 opacity-50">
           Space: pause/resume | →: skip | ←: restart | ↑↓: speed
         </div>
       )}

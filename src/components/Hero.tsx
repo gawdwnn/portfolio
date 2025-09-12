@@ -56,7 +56,7 @@ export default function Hero({ onBookCallClick, id }: HeroProps) {
     <section id={id} className={`relative min-h-screen w-full ${BACKGROUND_STYLES.sectionBorderBottom} ${BACKGROUND_STYLES.section}`}>
       <HeroBackground />
 
-      <div className="container relative z-10 mx-auto px-4 py-12 sm:py-20 min-h-screen flex flex-col justify-center">
+      <div className="container relative mx-auto px-4 py-12 sm:py-20 min-h-screen flex flex-col justify-center">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           <TerminalColumn
             ref={terminalRef}

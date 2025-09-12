@@ -7,6 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { personalInfo } from "@/data";
+import { BACKGROUND_STYLES } from "@/lib/background-styles";
 import { motion } from "framer-motion";
 import { Download, Github, Linkedin, Mail } from "lucide-react";
 import { TechStackShowcase } from "./TechStackShowcase";
@@ -43,12 +44,12 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative bg-neutral-950 border-t border-neutral-800 text-neutral-500">
+    <footer className={`relative ${BACKGROUND_STYLES.root} ${BACKGROUND_STYLES.sectionBorderTop}`}>
       <TechStackShowcase />
 
       <div className="relative z-10 pt-8 px-6">
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6">
-          <div className="text-xs text-center sm:text-left">
+          <div className="text-xs text-center text-neutral-500 sm:text-left">
             © {currentYear} Godwin O. All rights reserved.
           </div>
 
@@ -68,7 +69,7 @@ export default function Footer() {
                           ? "noopener noreferrer"
                           : undefined
                       }
-                      className="text-neutral-500 hover:text-white transition-colors"
+                      className="text-neutral-400 hover:text-white transition-colors"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -87,7 +88,7 @@ export default function Footer() {
                     aria-label={resumeLink.label}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-neutral-500 hover:text-white transition-colors"
+                    className="text-neutral-400 hover:text-white transition-colors"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -102,7 +103,7 @@ export default function Footer() {
           </TooltipProvider>
         </div>
         <div className="text-[10px] text-neutral-600 text-center mt-6 pb-2">
-          Built with vibes 🐾
+          🐾
         </div>
       </div>
     </footer>
