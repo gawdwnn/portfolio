@@ -1,8 +1,8 @@
 "use client";
 
-import { InfiniteSlider } from "@/components/infinite-slider";
+import { InfiniteSlider } from "@/components/Infinite-slider";
 import { ProgressiveBlur } from "@/components/ProgressiveBlur";
-import { Sparkles } from "@/components/sparkles";
+import { Sparkles } from "@/components/Sparkles";
 import {
   SiAmazon,
   SiDocker,

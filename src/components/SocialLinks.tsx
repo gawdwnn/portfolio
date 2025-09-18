@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/tooltip";
 import { personalInfo } from "@/data";
 import { LucideIcon } from "lucide-react";
-import { SOCIAL_LINK_CONFIGS, type SocialLinkConfig } from "./constants";
+import { SOCIAL_LINK_CONFIGS, type SocialLinkConfig } from "../lib/constants";
 
 interface SocialLinkProps {
   href: string;
@@ -44,7 +44,7 @@ const getHrefForSocialLink = (config: SocialLinkConfig): string => {
   if (config.isEmail) {
     return `mailto:${personalInfo[config.key]}`;
   }
-  return personalInfo[config.key] as string;
+  return personalInfo[config.key];
 };
 
 export const SocialLinks = () => (

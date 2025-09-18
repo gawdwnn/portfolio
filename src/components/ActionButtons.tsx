@@ -4,14 +4,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { LucideIcon } from "lucide-react";
-import { ACTION_BUTTON_CONFIGS } from "./constants";
+import { ACTION_BUTTON_CONFIGS } from "../lib/constants";
 
 interface ActionButtonProps {
   onClick: () => void;
   icon: LucideIcon;
   label: string;
   tooltip: string;
-  className: string;
 }
 
 const ActionButton = ({
@@ -19,12 +18,15 @@ const ActionButton = ({
   icon: Icon,
   label,
   tooltip,
-  className,
 }: ActionButtonProps) => (
   <Tooltip>
     <TooltipTrigger asChild>
-      <button onClick={onClick} className={className} aria-label={label}>
-        <Icon className="w-4 h-4" />
+      <button
+        onClick={onClick}
+        className="text-white/60 hover:text-white transition-colors"
+        aria-label={label}
+      >
+        <Icon className="w-5 h-5" />
       </button>
     </TooltipTrigger>
     <TooltipContent>
@@ -56,7 +58,7 @@ export const ActionButtons = ({
   };
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-4">
       {ACTION_BUTTON_CONFIGS.map((config) => (
         <ActionButton
           key={config.key}
@@ -64,7 +66,6 @@ export const ActionButtons = ({
           icon={config.icon}
           label={config.label}
           tooltip={config.tooltip}
-          className={config.className}
         />
       ))}
     </div>

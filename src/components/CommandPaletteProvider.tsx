@@ -24,12 +24,10 @@ export const useCommandPalette = () => useContext(CommandPaletteContext);
 
 interface CommandPaletteProviderProps {
   children: React.ReactNode;
-  onReplayIntro?: () => void;
 }
 
 export default function CommandPaletteProvider({
   children,
-  onReplayIntro,
 }: CommandPaletteProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { openBookingModal } = useModal();
@@ -60,7 +58,6 @@ export default function CommandPaletteProvider({
         isOpen={isOpen}
         onClose={close}
         onScheduleCall={openBookingModal}
-        onReplayIntro={onReplayIntro}
       />
       <CommandPaletteTrigger onClick={open} />
     </CommandPaletteContext.Provider>

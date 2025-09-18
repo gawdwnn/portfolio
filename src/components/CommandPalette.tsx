@@ -9,7 +9,6 @@ import {
   Layers,
   Lightbulb,
   Mail,
-  RefreshCw,
   Search,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -26,14 +25,12 @@ export interface CommandItem {
 interface CommandPaletteProps {
   isOpen: boolean;
   onClose: () => void;
-  onReplayIntro?: () => void;
   onScheduleCall?: () => void;
 }
 
 const CommandPalette = ({
   isOpen,
   onClose,
-  onReplayIntro,
   onScheduleCall,
 }: CommandPaletteProps) => {
   const createDefaultCommands = (): CommandItem[] => [
@@ -100,24 +97,6 @@ const CommandPalette = ({
       icon: "call",
       action: () => onScheduleCall && onScheduleCall(),
     },
-    {
-      id: "replay",
-      name: "Replay intro animation",
-      category: "action",
-      icon: "replay",
-      action: () => {
-        const heroSection = document.getElementById("hero-section");
-        if (heroSection) {
-          heroSection.scrollIntoView({ behavior: "smooth" });
-          if (onReplayIntro) {
-            onReplayIntro();
-          } else {
-            const event = new CustomEvent("replay-intro");
-            window.dispatchEvent(event);
-          }
-        }
-      },
-    },
   ];
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -128,7 +107,7 @@ const CommandPalette = ({
 
   const commands = useMemo(
     () => createDefaultCommands(),
-    [onScheduleCall, onReplayIntro]
+    [onScheduleCall]
   );
 
   const filterCommands = useCallback((query: string) => {
@@ -262,8 +241,6 @@ const CommandPalette = ({
     switch (command.icon) {
       case "call":
         return <Clock className="w-3.5 h-3.5" />;
-      case "replay":
-        return <RefreshCw className="w-3.5 h-3.5" />;
       case "command":
       case "terminal":
         return <Command className="w-3.5 h-3.5" />;

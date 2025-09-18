@@ -20,10 +20,10 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Product Engineer",
-  description: "Welcome to the portfolio of a product engineer",
+  title: "Software Engineer",
+  description: "Welcome to the portfolio of a Software engineer",
   icons: {
-    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>",
+    icon: "/favicon.svg",
   },
 };
 
@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark bg-background" style={{ colorScheme: "dark" }}>
       <body
         className={`${montserrat.className} ${jetbrainsMono.variable} antialiased`}
       >

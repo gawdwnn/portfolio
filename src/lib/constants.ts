@@ -1,4 +1,4 @@
-import { headlineData, personalInfo } from "@/data";
+import { headlineData, type PersonalInfo } from "@/data";
 import {
   BrainCircuit,
   Briefcase,
@@ -24,25 +24,25 @@ export interface StatConfig {
 export const STAT_CONFIGS: StatConfig[] = [
   {
     key: "years",
-    label: "Years Experience",
+    label: "Years of Experience",
     icon: Briefcase,
     hoverColor: "group-hover:text-cyan-400",
   },
   {
     key: "projects",
-    label: "Projects Completed",
+    label: "Projects Shipped",
     icon: Code,
     hoverColor: "group-hover:text-violet-400",
   },
   {
     key: "clients",
-    label: "Happy Clients",
+    label: "Clients",
     icon: Users,
     hoverColor: "group-hover:text-indigo-400",
   },
   {
     key: "aiSolutions",
-    label: "AI Solutions",
+    label: "AI Solutions Shipped",
     icon: BrainCircuit,
     hoverColor: "group-hover:text-emerald-400",
   },
@@ -51,7 +51,7 @@ export const STAT_CONFIGS: StatConfig[] = [
 // Social link configurations
 export interface SocialLinkConfig {
   key: keyof Pick<
-    typeof personalInfo,
+    PersonalInfo,
     "githubUrl" | "linkedinUrl" | "email" | "resumeUrl"
   >;
   icon: LucideIcon;
@@ -66,19 +66,19 @@ export const SOCIAL_LINK_CONFIGS: SocialLinkConfig[] = [
     key: "githubUrl",
     icon: Github,
     label: "GitHub",
-    tooltip: "View GitHub Profile",
+    tooltip: "View GitHub",
   },
   {
     key: "linkedinUrl",
     icon: Linkedin,
     label: "LinkedIn",
-    tooltip: "Connect/Chat on LinkedIn",
+    tooltip: "Connect on LinkedIn",
   },
   {
     key: "email",
     icon: Mail,
     label: "Email",
-    tooltip: "Send an Email",
+    tooltip: "Email me",
     target: "_self",
     isEmail: true,
   },
@@ -86,17 +86,15 @@ export const SOCIAL_LINK_CONFIGS: SocialLinkConfig[] = [
     key: "resumeUrl",
     icon: Download,
     label: "Resume",
-    tooltip: "View Resume",
+    tooltip: "View resume",
   },
 ];
 
-// Action button configurations
 export interface ActionButtonConfig {
   key: string;
   icon: LucideIcon;
   label: string;
   tooltip: string;
-  className: string;
   action: "bookCall" | "commandPalette";
 }
 
@@ -104,19 +102,15 @@ export const ACTION_BUTTON_CONFIGS: ActionButtonConfig[] = [
   {
     key: "schedule-call",
     icon: Clock,
-    label: "Schedule a call",
-    tooltip: "Schedule a call",
-    className:
-      "flex items-center justify-center gap-2 p-2 rounded-md bg-indigo-600/80 hover:bg-indigo-600 text-white text-sm font-medium transition-colors border border-indigo-500/50 shadow-sm",
+    label: "Book a call",
+    tooltip: "Book a 15-min intro",
     action: "bookCall",
   },
   {
     key: "command-palette",
     icon: Command,
-    label: "Open Command Palette",
-    tooltip: "Command Palette (ctrl/⌘ K)",
-    className:
-      "flex items-center justify-center gap-2 p-2 rounded-md bg-white/5 hover:bg-white/10 text-white/80 hover:text-white text-sm font-medium transition-colors border border-white/10",
+    label: "Quick actions (⌘K)",
+    tooltip: "Open quick actions (⌘K)",
     action: "commandPalette",
   },
 ];

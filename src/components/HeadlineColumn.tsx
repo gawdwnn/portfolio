@@ -2,11 +2,9 @@ import { useCommandPalette } from "@/components/CommandPaletteProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { headlineData } from "@/data";
 import { motion } from "framer-motion";
+import { LAYOUT } from "../lib/constants";
 import { ActionButtons } from "./ActionButtons";
-import { LAYOUT } from "./constants";
-import { HeadlineTitle } from "./HeadlineTitle";
 import { SocialLinks } from "./SocialLinks";
-import { StatsGrid } from "./StatsGrid";
 
 interface HeadlineColumnProps {
   onBookCallClick: () => void;
@@ -14,7 +12,6 @@ interface HeadlineColumnProps {
 
 const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
   const { open: openCommandPalette } = useCommandPalette();
-  const { description } = headlineData;
 
   return (
     <motion.div
@@ -29,18 +26,18 @@ const HeadlineColumn = ({ onBookCallClick }: HeadlineColumnProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.4 }}
         >
-          <HeadlineTitle />
+          <h1 className="max-w-[14ch] text-[clamp(2.5rem,6vw,4.25rem)] font-bold tracking-tight leading-[1.05] sm:leading-[1.02] mb-3">
+            <span className="block text-white text-center">Build Smarter. Ship Faster.</span>
+          </h1>
         </motion.div>
 
-        <p className="text-white/60 text-lg mt-6 mb-6 max-w-xl">
-          {description}
+        <p className="text-white/60 text-center text-lg mt-6 mb-6 max-w-xl">
+          {headlineData.description}
         </p>
-
-        <StatsGrid />
 
         <TooltipProvider delayDuration={100}>
           <div
-            className={`flex items-center justify-between w-full ${LAYOUT.maxWidth} ${LAYOUT.margin.vertical}`}
+            className={`flex items-center justify-center w-full gap-4 ${LAYOUT.maxWidth} ${LAYOUT.margin.vertical}`}
           >
             <motion.div
               initial={{ opacity: 0 }}

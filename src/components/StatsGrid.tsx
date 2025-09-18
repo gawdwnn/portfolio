@@ -1,5 +1,5 @@
 import { headlineData } from "@/data";
-import { LAYOUT, STAT_CONFIGS } from "./constants";
+import { LAYOUT, STAT_CONFIGS } from "../lib/constants";
 import { StatCard } from "./StatCard";
 
 export const StatsGrid = () => {
