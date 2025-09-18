@@ -1,19 +1,17 @@
 "use client";
 
-import { useCallback } from "react";
-import Particles from "react-tsparticles";
-import type { Container, Engine } from "tsparticles-engine";
-import { loadSlim } from "tsparticles-slim";
+import { loadBasic } from "@tsparticles/basic";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { useEffect, useId } from "react";
 
 const ParticleBackground = () => {
-  const particlesInit = useCallback(async (engine: Engine) => {
-    await loadSlim(engine);
+  useEffect(() => {
+    initParticlesEngine(async (engine) => {
+      await loadBasic(engine);
+    });
   }, []);
 
-  const particlesLoaded = useCallback(
-    async (container: Container | undefined) => {},
-    []
-  );
+  const id = useId();
 
   const options = {
     background: {
@@ -28,7 +26,9 @@ const ParticleBackground = () => {
           enable: true,
           mode: "repulse",
         },
-        resize: true,
+        resize: {
+          enable: true,
+        },
       },
       modes: {
         repulse: {
@@ -49,10 +49,10 @@ const ParticleBackground = () => {
         width: 1,
       },
       move: {
-        direction: "none",
+        direction: "none" as const,
         enable: true,
         outModes: {
-          default: "out",
+          default: "out" as const,
         },
         random: true,
         speed: 0.5,
@@ -78,14 +78,10 @@ const ParticleBackground = () => {
     detectRetina: true,
   };
 
-  const typedOptions = options as any;
-
   return (
     <Particles
-      id="tsparticles"
-      init={particlesInit}
-      loaded={particlesLoaded}
-      options={typedOptions}
+      id={id}
+      options={options}
       className="fixed inset-0 z-10 pointer-events-none"
     />
   );

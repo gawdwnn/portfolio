@@ -1,9 +1,8 @@
 "use client";
 
-import type { MoveDirection } from "@tsparticles/engine";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
-import { loadSlim } from "@tsparticles/slim";
-import { HTMLAttributes, useEffect, useId, useState } from "react";
+import { loadBasic } from "@tsparticles/basic";
+import { HTMLAttributes, useEffect, useId } from "react";
 
 interface SparklesProps extends HTMLAttributes<HTMLDivElement> {
   size?: number;
@@ -16,7 +15,7 @@ interface SparklesProps extends HTMLAttributes<HTMLDivElement> {
   minOpacity?: number | null;
   color?: string;
   background?: string;
-  options?: Record<string, any>;
+  options?: Record<string, unknown>;
 }
 
 export function Sparkles({
@@ -33,13 +32,9 @@ export function Sparkles({
   background = "transparent",
   options = {},
 }: SparklesProps) {
-  const [isReady, setIsReady] = useState(false);
-
   useEffect(() => {
     initParticlesEngine(async (engine) => {
-      await loadSlim(engine);
-    }).then(() => {
-      setIsReady(true);
+      await loadBasic(engine);
     });
   }, []);
 
@@ -62,7 +57,7 @@ export function Sparkles({
       },
       move: {
         enable: true,
-        direction: "none" as MoveDirection,
+        direction: "none" as const,
         speed: {
           min: minSpeed || speed / 10,
           max: speed,
@@ -94,12 +89,10 @@ export function Sparkles({
   };
 
   return (
-    isReady && (
-      <Particles
-        id={id}
-        options={{ ...defaultOptions, ...options }}
-        className={className}
-      />
-    )
+    <Particles
+      id={id}
+      options={{ ...defaultOptions, ...options }}
+      className={className}
+    />
   );
 }
