@@ -1,6 +1,6 @@
 "use client";
 
-import { InfiniteSlider } from "@/components/Infinite-slider";
+import { InfiniteSlider } from "@/components/InfiniteSlider";
 import { ProgressiveBlur } from "@/components/ProgressiveBlur";
 import { Sparkles } from "@/components/Sparkles";
 import {
