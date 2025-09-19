@@ -8,7 +8,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useHotkeys } from "react-hotkeys-hook";
 
 interface CursorConfig {
   style?: "line" | "block" | "underscore";
@@ -24,13 +23,8 @@ interface StreamingTextProps {
   speed?: "slow" | "normal" | "fast" | "human" | number;
   cursor?: CursorConfig;
   onComplete?: () => void;
-  onCharacter?: (char: string, index: number) => void;
-  onWord?: (word: string, wordIndex: number) => void;
-  onPause?: () => void;
-  onResume?: () => void;
   pauseOnPunctuation?: number;
   className?: string;
-  interactive?: boolean;
   autoStart?: boolean;
   preserveWhitespace?: boolean;
 }
@@ -46,28 +40,20 @@ interface TextSegment {
 const StreamingText: React.FC<StreamingTextProps> = ({
   content,
   speed = "human",
-  cursor = { style: "line", blink: true, blinkSpeed: 530 },
+  cursor = { style: "line", blink: true, blinkSpeed: 500 },
   onComplete,
-  onCharacter,
-  onWord,
-  onPause,
-  onResume,
   pauseOnPunctuation = 150,
   className = "",
-  interactive = false,
   autoStart = true,
   preserveWhitespace = true,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(autoStart);
   const [isComplete, setIsComplete] = useState(false);
-  const [currentSpeed, setCurrentSpeed] = useState(speed);
   const [showCursor, setShowCursor] = useState(true);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const cursorIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const lastWordIndexRef = useRef(0);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   // Parse content into segments with markup support
   const segments = useMemo(() => {
@@ -115,22 +101,40 @@ const StreamingText: React.FC<StreamingTextProps> = ({
     return parseMarkup(content);
   }, [content]);
 
+  // Memoize character mapping for better performance
+  const characterMap = useMemo(() => {
+    const map = new Map<number, string>();
+    let charIndex = 0;
+    for (const segment of segments) {
+      for (let i = 0; i < segment.text.length; i++) {
+        map.set(charIndex + i, segment.text[i]);
+      }
+      charIndex += segment.text.length;
+    }
+    return map;
+  }, [segments]);
+
+  // Get current character being typed
+  const getCurrentCharacter = useCallback(() => {
+    return characterMap.get(currentIndex) || null;
+  }, [characterMap, currentIndex]);
+
   // Get typing delay based on speed setting
   const getTypingDelay = useCallback(() => {
-    if (typeof currentSpeed === "number") return currentSpeed;
+    if (typeof speed === "number") return speed;
 
     const baseDelays = {
       slow: 120,
       normal: 60,
       fast: 30,
-      human: 45,
+      human: 35,
     };
 
-    let delay = baseDelays[currentSpeed] || 60;
+    let delay = baseDelays[speed] || 60;
 
     // Add human-like variance for "human" mode
-    if (currentSpeed === "human") {
-      const variance = Math.random() * 40 - 20; // ±20ms variance
+    if (speed === "human") {
+      const variance = Math.random() * 20 - 10;
       delay += variance;
 
       // Longer pauses after certain characters
@@ -140,36 +144,24 @@ const StreamingText: React.FC<StreamingTextProps> = ({
       } else if (currentChar === ",") {
         delay += pauseOnPunctuation * 0.3;
       } else if (currentChar === " ") {
-        delay += Math.random() * 20; // Slight variance on spaces
+        delay += Math.random() * 10;
       }
     }
 
-    return Math.max(delay, 10); // Minimum 10ms delay
-  }, [currentSpeed, pauseOnPunctuation, currentIndex]);
-
-  // Get current character being typed
-  const getCurrentCharacter = useCallback(() => {
-    let charIndex = 0;
-    for (const segment of segments) {
-      if (charIndex + segment.text.length > currentIndex) {
-        return segment.text[currentIndex - charIndex];
-      }
-      charIndex += segment.text.length;
-    }
-    return null;
-  }, [segments, currentIndex]);
+    return Math.max(delay, 15);
+  }, [speed, pauseOnPunctuation, getCurrentCharacter]);
 
   // Get total character count
   const totalChars = useMemo(() => {
     return segments.reduce((total, segment) => total + segment.text.length, 0);
   }, [segments]);
 
-  // Handle cursor blinking
+  // Handle cursor blinking with optimized timing
   useEffect(() => {
     if (cursor.blink && !isComplete) {
       cursorIntervalRef.current = setInterval(() => {
         setShowCursor((prev) => !prev);
-      }, cursor.blinkSpeed || 530);
+      }, cursor.blinkSpeed || 500); // Slightly faster for smoother blink
 
       return () => {
         if (cursorIntervalRef.current) {
@@ -181,7 +173,7 @@ const StreamingText: React.FC<StreamingTextProps> = ({
     }
   }, [cursor.blink, cursor.blinkSpeed, isComplete]);
 
-  // Main typing effect
+  // Main typing effect with optimized dependencies
   useEffect(() => {
     if (!isPlaying || isComplete) return;
 
@@ -192,49 +184,22 @@ const StreamingText: React.FC<StreamingTextProps> = ({
       return;
     }
 
+    const char = getCurrentCharacter();
+    const delay = getTypingDelay();
+
     intervalRef.current = setTimeout(() => {
-      const char = getCurrentCharacter();
-
-      setCurrentIndex((prev) => {
-        const newIndex = prev + 1;
-
-        // Character callback
-        if (char) {
-          onCharacter?.(char, newIndex - 1);
-        }
-
-        // Word completion callback
-        if (char === " " || newIndex === totalChars) {
-          const currentWordIndex = Math.floor(newIndex / 5); // Approximate word count
-          if (currentWordIndex > lastWordIndexRef.current) {
-            onWord?.("", currentWordIndex);
-            lastWordIndexRef.current = currentWordIndex;
-          }
-        }
-
-        return newIndex;
-      });
-    }, getTypingDelay());
+      setCurrentIndex((prev) => prev + 1);
+    }, delay);
 
     return () => {
       if (intervalRef.current) {
         clearTimeout(intervalRef.current);
       }
     };
-  }, [
-    isPlaying,
-    currentIndex,
-    totalChars,
-    isComplete,
-    getTypingDelay,
-    getCurrentCharacter,
-    onCharacter,
-    onWord,
-    onComplete,
-  ]);
+  }, [isPlaying, currentIndex, totalChars, isComplete]);
 
-  // Render the text with proper markup
-  const renderText = () => {
+  // Render the text with proper markup - memoized for performance
+  const renderText = useMemo(() => {
     let charIndex = 0;
     const result: React.ReactNode[] = [];
 
@@ -283,74 +248,8 @@ const StreamingText: React.FC<StreamingTextProps> = ({
     }
 
     return result;
-  };
+  }, [segments, currentIndex, preserveWhitespace]);
 
-  // Interactive controls
-  const pause = useCallback(() => {
-    setIsPlaying(false);
-    onPause?.();
-  }, [onPause]);
-
-  const resume = useCallback(() => {
-    setIsPlaying(true);
-    onResume?.();
-  }, [onResume]);
-
-  const togglePlayPause = useCallback(() => {
-    if (isPlaying) {
-      pause();
-    } else {
-      resume();
-    }
-  }, [isPlaying, pause, resume]);
-
-  const skipToEnd = useCallback(() => {
-    setCurrentIndex(totalChars);
-    setIsComplete(true);
-    setIsPlaying(false);
-    setShowCursor(false);
-    onComplete?.();
-  }, [totalChars, onComplete]);
-
-  const restart = useCallback(() => {
-    setCurrentIndex(0);
-    setIsComplete(false);
-    setIsPlaying(true);
-    setShowCursor(true);
-    lastWordIndexRef.current = 0;
-  }, []);
-
-  const increaseSpeed = useCallback(() => {
-    setCurrentSpeed((prev) => {
-      if (typeof prev === "number") return Math.max(10, prev - 10);
-      const speeds: Array<"slow" | "normal" | "fast" | "human"> = [
-        "slow",
-        "normal",
-        "fast",
-        "human",
-      ];
-      const currentIdx = speeds.indexOf(
-        prev as "slow" | "normal" | "fast" | "human"
-      );
-      return speeds[Math.max(0, currentIdx - 1)] || prev;
-    });
-  }, []);
-
-  const decreaseSpeed = useCallback(() => {
-    setCurrentSpeed((prev) => {
-      if (typeof prev === "number") return prev + 10;
-      const speeds: Array<"slow" | "normal" | "fast" | "human"> = [
-        "slow",
-        "normal",
-        "fast",
-        "human",
-      ];
-      const currentIdx = speeds.indexOf(
-        prev as "slow" | "normal" | "fast" | "human"
-      );
-      return speeds[Math.min(speeds.length - 1, currentIdx + 1)] || prev;
-    });
-  }, []);
 
   // Cursor styles
   const getCursorStyle = () => {
@@ -384,81 +283,11 @@ const StreamingText: React.FC<StreamingTextProps> = ({
     }
   };
 
-  // Keyboard controls using react-hotkeys-hook
-  useHotkeys(
-    "space",
-    (e) => {
-      e.preventDefault();
-      togglePlayPause();
-    },
-    {
-      enabled: interactive,
-      enableOnFormTags: true,
-      enableOnContentEditable: true,
-    }
-  );
-
-  useHotkeys(
-    "right",
-    (e) => {
-      e.preventDefault();
-      skipToEnd();
-    },
-    {
-      enabled: interactive,
-      enableOnFormTags: true,
-      enableOnContentEditable: true,
-    }
-  );
-
-  useHotkeys(
-    "left",
-    (e) => {
-      e.preventDefault();
-      restart();
-    },
-    {
-      enabled: interactive,
-      enableOnFormTags: true,
-      enableOnContentEditable: true,
-    }
-  );
-
-  useHotkeys(
-    "up",
-    (e) => {
-      e.preventDefault();
-      increaseSpeed();
-    },
-    {
-      enabled: interactive,
-      enableOnFormTags: true,
-      enableOnContentEditable: true,
-    }
-  );
-
-  useHotkeys(
-    "down",
-    (e) => {
-      e.preventDefault();
-      decreaseSpeed();
-    },
-    {
-      enabled: interactive,
-      enableOnFormTags: true,
-      enableOnContentEditable: true,
-    }
-  );
 
   return (
-    <div
-      ref={containerRef}
-      className={`inline-block font-mono text-base md:text-md ${className}`}
-      tabIndex={interactive ? 0 : undefined}
-      style={{ outline: "none" }}
-    >
+    <div className={`inline-block ${className}`}>
       <span className="inline-block">
-        {renderText()}
+        {renderText}
         <AnimatePresence>
           {!isComplete && showCursor && (
             <motion.span
@@ -471,12 +300,6 @@ const StreamingText: React.FC<StreamingTextProps> = ({
           )}
         </AnimatePresence>
       </span>
-
-      {interactive && (
-        <div className="hidden md:block mt-2 text-xs text-gray-500 opacity-50">
-          Space: pause/resume | →: skip | ←: restart | ↑↓: speed
-        </div>
-      )}
     </div>
   );
 };

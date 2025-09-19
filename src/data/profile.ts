@@ -40,7 +40,7 @@ export function generateTerminalCommands(): TerminalCommand[] {
   return [
     {
       command: "whoami",
-      output: [`${personalInfo.name} • ${personalInfo.title}`],
+      output: [`${personalInfo.name} | ${personalInfo.title}`],
     },
     {
       command: "echo $MISSION",

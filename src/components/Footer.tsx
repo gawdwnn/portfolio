@@ -62,10 +62,11 @@ export default function Footer() {
                       href={link.href}
                       aria-label={link.label}
                       target={
+                        link.href.startsWith("mailto:") ? "_self" : 
                         link.href.startsWith("http") ? "_blank" : undefined
                       }
                       rel={
-                        link.href.startsWith("http")
+                        link.href.startsWith("http") && !link.href.startsWith("mailto:")
                           ? "noopener noreferrer"
                           : undefined
                       }

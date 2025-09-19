@@ -48,7 +48,7 @@ export default function FeaturedProject() {
                     className="absolute inset-0 w-full h-full transform-gpu transition-all duration-700 group-hover:scale-105"
                     title={`${featuredProject.title} preview`}
                     loading="lazy"
-                    sandbox="allow-scripts allow-forms allow-popups allow-top-navigation"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation"
                     referrerPolicy="no-referrer-when-downgrade"
                     onError={() => console.log('iframe failed to load')}
                     style={{ 

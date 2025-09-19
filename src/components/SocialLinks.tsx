@@ -21,28 +21,34 @@ const SocialLink = ({
   label,
   tooltip,
   target = "_blank",
-}: SocialLinkProps) => (
-  <Tooltip>
-    <TooltipTrigger asChild>
-      <a
-        href={href}
-        target={target !== "_self" ? target : undefined}
-        rel={target !== "_self" ? "noopener noreferrer" : undefined}
-        className="text-white/60 hover:text-white transition-colors"
-        aria-label={label}
-      >
-        <Icon className="w-5 h-5" />
-      </a>
-    </TooltipTrigger>
-    <TooltipContent>
-      <p>{tooltip}</p>
-    </TooltipContent>
-  </Tooltip>
-);
+}: SocialLinkProps) => {
+  const isEmail = href.startsWith("mailto:");
+  
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <a
+          href={href}
+          target={isEmail ? "_self" : (target !== "_self" ? target : undefined)}
+          rel={!isEmail && target !== "_self" ? "noopener noreferrer" : undefined}
+          className="text-white/60 hover:text-white transition-colors"
+          aria-label={label}
+        >
+          <Icon className="w-5 h-5" />
+        </a>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>{tooltip}</p>
+      </TooltipContent>
+    </Tooltip>
+  );
+};
 
 const getHrefForSocialLink = (config: SocialLinkConfig): string => {
   if (config.isEmail) {
-    return `mailto:${personalInfo[config.key]}`;
+    const email = personalInfo[config.key];
+    // Simple mailto URL - only sets recipient (TO field)
+    return `mailto:${email}`;
   }
   return personalInfo[config.key];
 };
